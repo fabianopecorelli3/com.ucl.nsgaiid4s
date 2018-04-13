@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-03-18T10:04:13</date>
+  <millis>1521367453044</millis>
+  <sequence>0</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.JMetalLogger</class>
+  <method>configureLoggers</method>
+  <thread>1</thread>
+  <message>Loggers configured with null</message>
+</record>
+<record>
+  <date>2018-03-18T10:04:13</date>
+  <millis>1521367453059</millis>
+  <sequence>1</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.experiment.component.ExecuteAlgorithms</class>
+  <method>run</method>
+  <thread>1</thread>
+  <message>ExecuteAlgorithms: Preparing output directory</message>
+</record>
+<record>
+  <date>2018-03-18T10:04:13</date>
+  <millis>1521367453075</millis>
+  <sequence>2</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.experiment.util.ExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message> Running algorithm: Sardegna, problem: ZDT3, run: 0, funFile: D:\Google Drive\Unisa\Magistrale\Master Thesis\jMetal\experiments/NSGAIIStudy/data/Sardegna/ZDT3/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-03-18T10:04:13</date>
+  <millis>1521367453075</millis>
+  <sequence>3</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.experiment.util.ExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>66</thread>
+  <message> Running algorithm: Sardegna, problem: ZDT6, run: 0, funFile: D:\Google Drive\Unisa\Magistrale\Master Thesis\jMetal\experiments/NSGAIIStudy/data/Sardegna/ZDT6/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-03-18T10:04:13</date>
+  <millis>1521367453075</millis>
+  <sequence>4</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.experiment.util.ExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>67</thread>
+  <message> Running algorithm: Sardegna, problem: ZDT2, run: 0, funFile: D:\Google Drive\Unisa\Magistrale\Master Thesis\jMetal\experiments/NSGAIIStudy/data/Sardegna/ZDT2/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-03-18T10:04:13</date>
+  <millis>1521367453075</millis>
+  <sequence>5</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.experiment.util.ExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>68</thread>
+  <message> Running algorithm: Sardegna, problem: ZDT4, run: 0, funFile: D:\Google Drive\Unisa\Magistrale\Master Thesis\jMetal\experiments/NSGAIIStudy/data/Sardegna/ZDT4/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-03-18T10:04:13</date>
+  <millis>1521367453075</millis>
+  <sequence>6</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.experiment.util.ExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>70</thread>
+  <message> Running algorithm: Sardegna, problem: ZDT1, run: 0, funFile: D:\Google Drive\Unisa\Magistrale\Master Thesis\jMetal\experiments/NSGAIIStudy/data/Sardegna/ZDT1/FUN0.tsv</message>
+</record>
+</log>
