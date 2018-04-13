@@ -6,8 +6,6 @@ package com.superamigos.sardegna.sardegna.algorithm.impl;
  * and open the template in the editor.
  */
 import com.superamigos.sardegna.sardegna.algorithm.ModifiedAbstractGeneticAlgorithm;
-import com.superamigos.sardegna.sardegna.operator.impl.mutation.SardegnaPolynomialMutation;
-import com.superamigos.sardegna.sardegna.operator.impl.crossover.SardegnaSBXCrossover;
 import com.superamigos.sardegna.sardegna.utils.PrinterUtils;
 import com.superamigos.sardegna.sardegna.rejectpolicy.RejectPolicy;
 import java.util.ArrayList;
@@ -139,7 +137,7 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
 
     @Override
     public int getMaxPopulationSize() {
-        return numberOfPartitions * populationSize;
+        return populationSize;
     }
 
     @Override
