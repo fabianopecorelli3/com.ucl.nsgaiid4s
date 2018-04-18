@@ -105,6 +105,12 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
                 return computeSuperPareto(a, b);
             });
 
+            
+            /*PrinterUtils.Printer.print("PARETO AT ITERATION " + i + ":\n\n");
+            for (S s : pareto) {
+                PrinterUtils.Printer.print(s.getObjective(0) + " - ");
+                PrinterUtils.Printer.print(s.getObjective(1) + "\n\n");
+            }*/
             updateProgress();
             i++;
         }

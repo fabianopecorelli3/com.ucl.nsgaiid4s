@@ -21,7 +21,7 @@ import org.uma.jmetal.util.JMetalException;
 public abstract class ModifiedAbstractGeneticAlgorithm<S extends Solution> extends AbstractGeneticAlgorithm<S, List<S>> {
 
     protected List<S> pareto;
-    
+
     public ModifiedAbstractGeneticAlgorithm(Problem<S> problem) {
         super(problem);
     }
@@ -31,19 +31,18 @@ public abstract class ModifiedAbstractGeneticAlgorithm<S extends Solution> exten
      * improve modularity
      */
     public void startExecution() {
+
+        PrinterUtils.Printer.print(new java.util.Date() + " - My population size: " + getMaxPopulationSize() + "\n\n");
         population = createInitialPopulation();
         population = evaluatePopulation(population);
-        PrinterUtils.Printer.print(new java.util.Date() + "STAMPO "+population.size()+" INDIVIDUI\n\n");
-        for (S s : population) {
-            PrinterUtils.Printer.print(new java.util.Date() + " - POPULATION SOTTO (0): " + s + "\n\n");
-        }
     }
 
     public void executeIteration() {
-        
-        if (population == null)
+
+        if (population == null) {
             startExecution();
-        
+        }
+
         List<S> offspringPopulation;
         List<S> matingPopulation;
         matingPopulation = selection(population);
@@ -52,6 +51,8 @@ public abstract class ModifiedAbstractGeneticAlgorithm<S extends Solution> exten
         population = replacement(population, offspringPopulation);
     }
 
+    abstract public List<S> extraEvaluation(List<S> solutionList);
+    
     abstract public void computePareto();
 
     abstract public void receiveRejectedIndividuals(List<S> rejectedIndividuals, RejectPolicy strategy, List<S> superPareto);
@@ -61,18 +62,20 @@ public abstract class ModifiedAbstractGeneticAlgorithm<S extends Solution> exten
         computePareto();
         return pareto;
     }
-    
-   /**
-   * A crossover operator is applied to a number of parents, and it assumed that the population contains
-   * a valid number of solutions. This method checks that.
-   * @param population
-   * @param numberOfParentsForCrossover
-   */
-  public void checkNumberOfParents(List<S> population, int numberOfParentsForCrossover) {
-    if ((population.size() % numberOfParentsForCrossover) != 0) {
-      throw new JMetalException("Wrong number of parents: the remainder if the " +
-              "population size (" + population.size() + ") is not divisible by " +
-              numberOfParentsForCrossover) ;
+
+    /**
+     * A crossover operator is applied to a number of parents, and it assumed
+     * that the population contains a valid number of solutions. This method
+     * checks that.
+     *
+     * @param population
+     * @param numberOfParentsForCrossover
+     */
+    public void checkNumberOfParents(List<S> population, int numberOfParentsForCrossover) {
+        if ((population.size() % numberOfParentsForCrossover) != 0) {
+            throw new JMetalException("Wrong number of parents: the remainder if the "
+                    + "population size (" + population.size() + ") is not divisible by "
+                    + numberOfParentsForCrossover);
+        }
     }
-  }
 }

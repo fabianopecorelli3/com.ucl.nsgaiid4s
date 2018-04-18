@@ -111,4 +111,9 @@ public class SardegnaNSGAII<S extends Solution<?>> extends ModifiedAbstractGenet
         if (myRejected.size() > 0)
             strategy.applyStrategy(this, myRejected, superPareto);
     }
+
+    @Override
+    public List<S> extraEvaluation(List<S> solutionList) {
+        return evaluatePopulation(solutionList);
+    }
 }
