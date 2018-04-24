@@ -53,16 +53,16 @@ import org.uma.jmetal.util.experiment.util.ExperimentProblem;
  *
  * @author fably
  */
-public class SardegnaRunner {
+public class SmallRunner {
 
-    private static final int INDEPENDENT_RUNS = 10;
+    private static final int INDEPENDENT_RUNS = 2;
     private String path;
     private JavaSparkContext sparkContext;
 
-    public SardegnaRunner() {
+    public SmallRunner() {
     }
 
-    public SardegnaRunner(String path, JavaSparkContext sparkContext) {
+    public SmallRunner(String path, JavaSparkContext sparkContext) {
         this.path = path;
         this.sparkContext = sparkContext;
     }
@@ -131,13 +131,13 @@ public class SardegnaRunner {
                     problemList.get(i).getProblem(),
                     new SBXCrossover(1.0, 5),
                     new PolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0))
-                    .setMaxEvaluations(25000)
+                    .setMaxEvaluations(2500)
                     .setPopulationSize(250)
                     .build();
             algorithms.add(new ExperimentAlgorithm<>(algorithm, "jMetal", problemList.get(i).getTag()));
             Algorithm<List<DoubleSolution>> sardegna_RR = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
-                    25000,
+                    2500,
                     5,
                     250,
                     sparkContext,
@@ -148,7 +148,7 @@ public class SardegnaRunner {
             algorithms.add(new ExperimentAlgorithm<>(sardegna_RR, "RandomReplacement", problemList.get(i).getTag()));
             Algorithm<List<DoubleSolution>> sardegna_REPL = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
-                    25000,
+                    2500,
                     5,
                     250,
                     sparkContext,
@@ -159,7 +159,7 @@ public class SardegnaRunner {
             algorithms.add(new ExperimentAlgorithm<>(sardegna_REPL, "Replacement", problemList.get(i).getTag()));
             Algorithm<List<DoubleSolution>> sardegna_DR = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
-                    25000,
+                    2500,
                     5,
                     250,
                     sparkContext,
@@ -170,7 +170,7 @@ public class SardegnaRunner {
             algorithms.add(new ExperimentAlgorithm<>(sardegna_DR, "DominanceRanking", problemList.get(i).getTag()));
             Algorithm<List<DoubleSolution>> sardegna_REPR = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
-                    25000,
+                    2500,
                     5,
                     250,
                     sparkContext,
@@ -181,7 +181,7 @@ public class SardegnaRunner {
             algorithms.add(new ExperimentAlgorithm<>(sardegna_REPR, "Reproduction", problemList.get(i).getTag()));
             Algorithm<List<DoubleSolution>> sardegna_RM = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
-                    25000,
+                    2500,
                     5,
                     250,
                     sparkContext,

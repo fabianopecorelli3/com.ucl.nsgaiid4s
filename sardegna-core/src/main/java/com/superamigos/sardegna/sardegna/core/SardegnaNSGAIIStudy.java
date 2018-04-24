@@ -39,8 +39,8 @@ public class SardegnaNSGAIIStudy {
     SparkConf sparkConf = new SparkConf().setAppName("Sardegna").setMaster("local[2]").set("spark.executor.memory", "1g");
     JavaSparkContext sparkContext = new JavaSparkContext(sparkConf);
     
-    RejectPolicy policy = new RandomReplacementRejectPolicy();
-    SardegnaRunner runner =  new SardegnaRunner(experimentBaseDirectory, sparkContext, policy);
+//    RejectPolicy policy = new RandomReplacementRejectPolicy();
+    SardegnaRunner runner =  new SardegnaRunner(experimentBaseDirectory, sparkContext);
     runner.run();
     
   }
