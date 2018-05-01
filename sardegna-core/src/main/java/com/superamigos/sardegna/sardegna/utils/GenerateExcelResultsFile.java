@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,6 +44,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -157,7 +159,9 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
 
                     row = sheet.getRow(rowNumber + rowOffset);
                     Cell cell = row.createCell(columnOffset);
-                    cell.setCellValue(indicatorValue);
+
+                    String toWrite = String.format(Locale.ENGLISH, "%.4f", indicatorValue);
+                    cell.setCellValue(toWrite);
                     rowNumber++;
 
                 }
@@ -175,7 +179,47 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
         } catch (IOException e) {
             e.printStackTrace();
         }
+        generateFinalExcel();
 
+    }
+
+    private void generateFinalExcel() throws IOException {
+        int problemListSize = experiment.getProblemList().size();
+        int algorithmListSize = experiment.getAlgorithmList().size() / experiment.getProblemList().size();
+        double[][][] values = new double[problemListSize][algorithmListSize][experiment.getIndependentRuns()];
+        //apro file        
+        String fileName = experiment.getExperimentBaseDirectory() + "/results.xls";
+        File file = new File(fileName);
+        HSSFWorkbook workbook = null;
+
+        if (file.exists()) {
+            try {
+                workbook = (HSSFWorkbook) WorkbookFactory.create(file);
+            } catch (InvalidFormatException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new FileNotFoundException();
+        }
+        int offset = 0;
+        int j = 0;
+        for (GenericIndicator<S> indicator : experiment.getIndicatorList()) {
+            HSSFSheet sheet = workbook.getSheet(indicator.getName());
+            values = new double[problemListSize][algorithmListSize][experiment.getIndependentRuns()];
+            for (int p = 0; p < problemListSize; p++) {
+                for (int t = 0; t < algorithmListSize; t++) {
+                    for (int i = 0; i < experiment.getIndependentRuns(); i++) {
+                        Row row = sheet.getRow(i + offset + 1);
+                        values[p][t][i] = row.getCell(t + 2).getNumericCellValue();
+                    }
+                }
+                offset += experiment.getIndependentRuns();
+            }
+            //calcolaIncroci(values);
+            j++;
+        }
+        //for problemList
+        //compara a 2 a 2 tutte le tecniche
     }
 
 }

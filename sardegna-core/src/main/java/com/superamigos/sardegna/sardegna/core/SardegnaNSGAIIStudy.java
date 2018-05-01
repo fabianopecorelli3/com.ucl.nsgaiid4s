@@ -40,7 +40,7 @@ public class SardegnaNSGAIIStudy {
     JavaSparkContext sparkContext = new JavaSparkContext(sparkConf);
     
 //    RejectPolicy policy = new RandomReplacementRejectPolicy();
-    SardegnaRunner runner =  new SardegnaRunner(experimentBaseDirectory, sparkContext);
+    SmallRunner runner =  new SmallRunner(experimentBaseDirectory, sparkContext);
     runner.run();
     
   }

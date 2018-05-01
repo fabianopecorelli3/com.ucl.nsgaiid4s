@@ -15,7 +15,7 @@ import com.superamigos.sardegna.sardegna.rejectpolicy.RemoveRejectPolicy;
 import com.superamigos.sardegna.sardegna.rejectpolicy.ReplacementRejectPolicy;
 import com.superamigos.sardegna.sardegna.rejectpolicy.ReproductionRejectPolicy;
 import com.superamigos.sardegna.sardegna.utils.GenerateExcelResultsFile;
-import com.superamigos.sardegna.sardegna.utils.SardegnaGenerateLatexTablesWithStatistics;
+import com.superamigos.sardegna.sardegna.utils.GenerateLatexTablesWithStatistics;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,11 +26,15 @@ import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAIIBuilder;
 import org.uma.jmetal.operator.impl.crossover.SBXCrossover;
 import org.uma.jmetal.operator.impl.mutation.PolynomialMutation;
-import org.uma.jmetal.problem.multiobjective.zdt.ZDT1;
-import org.uma.jmetal.problem.multiobjective.zdt.ZDT2;
-import org.uma.jmetal.problem.multiobjective.zdt.ZDT3;
-import org.uma.jmetal.problem.multiobjective.zdt.ZDT4;
-import org.uma.jmetal.problem.multiobjective.zdt.ZDT6;
+import org.uma.jmetal.problem.multiobjective.wfg.WFG1;
+import org.uma.jmetal.problem.multiobjective.wfg.WFG2;
+import org.uma.jmetal.problem.multiobjective.wfg.WFG3;
+import org.uma.jmetal.problem.multiobjective.wfg.WFG4;
+import org.uma.jmetal.problem.multiobjective.wfg.WFG5;
+import org.uma.jmetal.problem.multiobjective.wfg.WFG6;
+import org.uma.jmetal.problem.multiobjective.wfg.WFG7;
+import org.uma.jmetal.problem.multiobjective.wfg.WFG8;
+import org.uma.jmetal.problem.multiobjective.wfg.WFG9;
 import org.uma.jmetal.qualityindicator.impl.Epsilon;
 import org.uma.jmetal.qualityindicator.impl.GenerationalDistance;
 import org.uma.jmetal.qualityindicator.impl.InvertedGenerationalDistance;
@@ -44,7 +48,6 @@ import org.uma.jmetal.util.experiment.component.ComputeQualityIndicators;
 import org.uma.jmetal.util.experiment.component.ExecuteAlgorithms;
 import org.uma.jmetal.util.experiment.component.GenerateBoxplotsWithR;
 import org.uma.jmetal.util.experiment.component.GenerateFriedmanTestTables;
-import org.uma.jmetal.util.experiment.component.GenerateLatexTablesWithStatistics;
 import org.uma.jmetal.util.experiment.component.GenerateWilcoxonTestTablesWithR;
 import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
@@ -53,16 +56,16 @@ import org.uma.jmetal.util.experiment.util.ExperimentProblem;
  *
  * @author fably
  */
-public class SardegnaRunner {
+public class SardegnaWFGRunner {
 
     private static final int INDEPENDENT_RUNS = 10;
     private String path;
     private JavaSparkContext sparkContext;
 
-    public SardegnaRunner() {
+    public SardegnaWFGRunner() {
     }
 
-    public SardegnaRunner(String path, JavaSparkContext sparkContext) {
+    public SardegnaWFGRunner(String path, JavaSparkContext sparkContext) {
         this.path = path;
         this.sparkContext = sparkContext;
     }
@@ -73,15 +76,19 @@ public class SardegnaRunner {
         PrinterUtils.Printer.setPw("my-log.txt");
 
         List<ExperimentProblem<DoubleSolution>> problemList = new ArrayList<>();
-        problemList.add(new ExperimentProblem<>(new ZDT1()));
-        problemList.add(new ExperimentProblem<>(new ZDT2()));
-        problemList.add(new ExperimentProblem<>(new ZDT3()));
-        problemList.add(new ExperimentProblem<>(new ZDT4()));
-        problemList.add(new ExperimentProblem<>(new ZDT6()));
+        problemList.add(new ExperimentProblem<>(new WFG1()));
+        problemList.add(new ExperimentProblem<>(new WFG2()));
+        problemList.add(new ExperimentProblem<>(new WFG3()));
+        problemList.add(new ExperimentProblem<>(new WFG4()));
+        problemList.add(new ExperimentProblem<>(new WFG5()));
+        problemList.add(new ExperimentProblem<>(new WFG6()));
+        problemList.add(new ExperimentProblem<>(new WFG7()));
+        problemList.add(new ExperimentProblem<>(new WFG8()));
+        problemList.add(new ExperimentProblem<>(new WFG9()));
 
         List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithmList
                 = configureAlgorithmList(problemList);
-        List<String> referenceFrontFileNames = Arrays.asList("ZDT1.pf", "ZDT2.pf", "ZDT3.pf", "ZDT4.pf", "ZDT6.pf");
+        List<String> referenceFrontFileNames = Arrays.asList("WFG1.2D.pf", "WFG2.2D.pf", "WFG3.2D.pf", "WFG4.2D.pf", "WFG5.2D.pf", "WFG6.2D.pf", "WFG7.2D.pf", "WFG8.2D.pf", "WFG9.2D.pf");
 
         Experiment<DoubleSolution, List<DoubleSolution>> experiment
                 = new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>("NSGAIIStudy")
@@ -106,7 +113,7 @@ public class SardegnaRunner {
         new ExecuteAlgorithms<>(experiment).run();
         new ComputeQualityIndicators<>(experiment).run();
         new GenerateExcelResultsFile(experiment).run();
-        new SardegnaGenerateLatexTablesWithStatistics(experiment).run();
+        new GenerateLatexTablesWithStatistics(experiment).run();
         new GenerateWilcoxonTestTablesWithR<>(experiment).run();
         new GenerateFriedmanTestTables<>(experiment).run();
         new GenerateBoxplotsWithR<>(experiment).setRows(3).setColumns(3).run();

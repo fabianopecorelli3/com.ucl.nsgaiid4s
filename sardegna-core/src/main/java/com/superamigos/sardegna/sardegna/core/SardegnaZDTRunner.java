@@ -16,7 +16,6 @@ import com.superamigos.sardegna.sardegna.rejectpolicy.ReplacementRejectPolicy;
 import com.superamigos.sardegna.sardegna.rejectpolicy.ReproductionRejectPolicy;
 import com.superamigos.sardegna.sardegna.utils.GenerateExcelResultsFile;
 import com.superamigos.sardegna.sardegna.utils.GenerateLatexTablesWithStatistics;
-import com.superamigos.sardegna.sardegna.utils.SardegnaExperimentAlgorithm;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,16 +52,16 @@ import org.uma.jmetal.util.experiment.util.ExperimentProblem;
  *
  * @author fably
  */
-public class SmallRunner {
+public class SardegnaZDTRunner {
 
-    private static final int INDEPENDENT_RUNS = 2;
+    private static final int INDEPENDENT_RUNS = 10;
     private String path;
     private JavaSparkContext sparkContext;
 
-    public SmallRunner() {
+    public SardegnaZDTRunner() {
     }
 
-    public SmallRunner(String path, JavaSparkContext sparkContext) {
+    public SardegnaZDTRunner(String path, JavaSparkContext sparkContext) {
         this.path = path;
         this.sparkContext = sparkContext;
     }
@@ -116,9 +115,9 @@ public class SmallRunner {
     /**
      * The algorithm list is composed of pairs
      * {@link Algorithm} + {@link Problem} which form part of a
-     * {@link SardegnaExperimentAlgorithm}, which is a decorator for class
+     * {@link ExperimentAlgorithm}, which is a decorator for class
      * {@link Algorithm}. The {@link
-     * SardegnaExperimentAlgorithm} has an optional tag component, that can be set as it
+     * ExperimentAlgorithm} has an optional tag component, that can be set as it
      * is shown in this example, where four variants of a same algorithm are
      * defined.
      */
@@ -131,13 +130,13 @@ public class SmallRunner {
                     problemList.get(i).getProblem(),
                     new SBXCrossover(1.0, 5),
                     new PolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0))
-                    .setMaxEvaluations(2500)
+                    .setMaxEvaluations(25000)
                     .setPopulationSize(250)
                     .build();
-            algorithms.add(new SardegnaExperimentAlgorithm<>(algorithm, "jMetal", problemList.get(i).getTag()));
+            algorithms.add(new ExperimentAlgorithm<>(algorithm, "jMetal", problemList.get(i).getTag()));
             Algorithm<List<DoubleSolution>> sardegna_RR = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
-                    2500,
+                    25000,
                     5,
                     250,
                     sparkContext,
@@ -145,10 +144,10 @@ public class SmallRunner {
                     new SardegnaSBXCrossover(1.0, 5),
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
-            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_RR, "RR", problemList.get(i).getTag()));
+            algorithms.add(new ExperimentAlgorithm<>(sardegna_RR, "RandomReplacement", problemList.get(i).getTag()));
             Algorithm<List<DoubleSolution>> sardegna_REPL = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
-                    2500,
+                    25000,
                     5,
                     250,
                     sparkContext,
@@ -156,10 +155,10 @@ public class SmallRunner {
                     new SardegnaSBXCrossover(1.0, 5),
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
-            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_REPL, "RPL", problemList.get(i).getTag()));
+            algorithms.add(new ExperimentAlgorithm<>(sardegna_REPL, "Replacement", problemList.get(i).getTag()));
             Algorithm<List<DoubleSolution>> sardegna_DR = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
-                    2500,
+                    25000,
                     5,
                     250,
                     sparkContext,
@@ -167,10 +166,10 @@ public class SmallRunner {
                     new SardegnaSBXCrossover(1.0, 5),
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
-            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_DR, "DR", problemList.get(i).getTag()));
+            algorithms.add(new ExperimentAlgorithm<>(sardegna_DR, "DominanceRanking", problemList.get(i).getTag()));
             Algorithm<List<DoubleSolution>> sardegna_REPR = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
-                    2500,
+                    25000,
                     5,
                     250,
                     sparkContext,
@@ -178,10 +177,10 @@ public class SmallRunner {
                     new SardegnaSBXCrossover(1.0, 5),
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
-            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_REPR, "RPR", problemList.get(i).getTag()));
+            algorithms.add(new ExperimentAlgorithm<>(sardegna_REPR, "Reproduction", problemList.get(i).getTag()));
             Algorithm<List<DoubleSolution>> sardegna_RM = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
-                    2500,
+                    25000,
                     5,
                     250,
                     sparkContext,
@@ -189,7 +188,7 @@ public class SmallRunner {
                     new SardegnaSBXCrossover(1.0, 5),
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
-            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_RM, "RMV", problemList.get(i).getTag()));
+            algorithms.add(new ExperimentAlgorithm<>(sardegna_RM, "Remove", problemList.get(i).getTag()));
         }
         return algorithms;
     }
