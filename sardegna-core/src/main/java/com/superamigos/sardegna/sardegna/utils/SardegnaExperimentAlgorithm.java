@@ -7,6 +7,7 @@ package com.superamigos.sardegna.sardegna.utils;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import org.uma.jmetal.algorithm.Algorithm;
@@ -52,7 +53,7 @@ public class SardegnaExperimentAlgorithm<S extends Solution<?>, Result> extends 
 
         String funFile = outputDirectoryName + "/FUN" + id + ".tsv";
         String varFile = outputDirectoryName + "/VAR" + id + ".tsv";
-        String timesFile = outputDirectoryName + "/TIMES" + id + ".tsv";
+        String timesFile = outputDirectoryName + "/TIMES";
 
         JMetalLogger.logger.info(
                 " Running algorithm: " + getAlgorithmTag()
@@ -75,10 +76,11 @@ public class SardegnaExperimentAlgorithm<S extends Solution<?>, Result> extends 
 
         long timeInSecond = (endTime - startTime) / 1000;
 
-        printTimesToFile(new DefaultFileOutputContext(timesFile), timeInSecond);
+        printTimesToFile(timeInSecond, timesFile);
 
     }
 
+    /*
     public void printTimesToFile(FileOutputContext context, long timeInSecond) {
         BufferedWriter bufferedWriter = context.getFileWriter();
 
@@ -88,6 +90,18 @@ public class SardegnaExperimentAlgorithm<S extends Solution<?>, Result> extends 
             bufferedWriter.close();
         } catch (IOException e) {
             throw new JMetalException("Error printing objecives to file: ", e);
+        }
+    }
+     */
+    
+    public void printTimesToFile(Long timeInSecond, String fileName) {
+        FileWriter os;
+        try {
+            os = new FileWriter(fileName, true);
+            os.write("" + timeInSecond + "\n");
+            os.close();
+        } catch (IOException ex) {
+            throw new JMetalException("Error writing time to file" + ex);
         }
     }
 

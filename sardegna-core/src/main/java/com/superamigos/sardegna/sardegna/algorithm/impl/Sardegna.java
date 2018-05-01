@@ -80,13 +80,13 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
         int i = 0;
         while (!isStoppingConditionReached()) {
 
-            PrinterUtils.Printer.print("EXECUTING ITERATION " + i + "\n\n");
+            PrinterUtils.Printer.debug("EXECUTING ITERATION " + i);
 
             algorithmsToParallelize = sparkContext.parallelize(algorithms, numberOfPartitions);
 
             algorithmsToParallelize = algorithmsToParallelize.map(algorithm -> {
                 if (rejectedIndividuals.size() > 0) {
-                    PrinterUtils.Printer.print(new java.util.Date() + " - I rejcted inviati sono " + rejectedIndividuals.size() + "\n\n");
+                    PrinterUtils.Printer.debug("I rejcted inviati sono " + rejectedIndividuals.size());
                     algorithm.receiveRejectedIndividuals(rejectedIndividuals, rejectPolicy, pareto);
                 }
                 algorithm.executeIteration();
@@ -175,7 +175,7 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
             }
         }
         for (S s : rejectedIndividuals) {
-            PrinterUtils.Printer.print(new java.util.Date() + " - REJECTED: " + s + "\n\n");
+            PrinterUtils.Printer.debug("REJECTED: " + s);
         }
         return nonDominated;
     }

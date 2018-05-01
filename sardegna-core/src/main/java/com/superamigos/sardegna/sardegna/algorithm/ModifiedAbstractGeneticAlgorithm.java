@@ -32,7 +32,7 @@ public abstract class ModifiedAbstractGeneticAlgorithm<S extends Solution> exten
      */
     public void startExecution() {
 
-        PrinterUtils.Printer.print(new java.util.Date() + " - My population size: " + getMaxPopulationSize() + "\n\n");
+        PrinterUtils.Printer.debug("My population size: " + getMaxPopulationSize());
         population = createInitialPopulation();
         population = evaluatePopulation(population);
     }

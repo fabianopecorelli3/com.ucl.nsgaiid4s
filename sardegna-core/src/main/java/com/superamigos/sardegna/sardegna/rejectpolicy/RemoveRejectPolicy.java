@@ -23,7 +23,7 @@ public class RemoveRejectPolicy<S extends Solution> implements RejectPolicy<S> {
         int populationMaxSize = algorithm.getMaxPopulationSize();
         int newPopulationSize = population.size() - rejectedIndividuals.size();
         if ((newPopulationSize*2) >= populationMaxSize){
-            PrinterUtils.Printer.print(new java.util.Date() + " - Sto scartando qualcosa\n\n");
+            PrinterUtils.Printer.debug("Sto scartando qualcosa");
             population.removeAll(rejectedIndividuals);
             algorithm.setPopulation(population);
         }

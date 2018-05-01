@@ -91,22 +91,22 @@ public class SardegnaNSGAII<S extends Solution<?>> extends ModifiedAbstractGenet
   
     @Override
     public void receiveRejectedIndividuals(List<S> rejectedIndividuals, RejectPolicy strategy, List<S> superPareto) {
-        PrinterUtils.Printer.print(new java.util.Date() + " - CALLED\n\n");
+        PrinterUtils.Printer.debug("CALLED");
         List<S> myRejected = new ArrayList<>();
         
         for (S s : rejectedIndividuals) {
-            PrinterUtils.Printer.print(new java.util.Date() + " - REJECTED SOTTO: " + s + "\n\n");
+            PrinterUtils.Printer.debug("REJECTED SOTTO: " + s);
         }
         
         for (S s : population) {
-            PrinterUtils.Printer.print(new java.util.Date() + " - POPULATION SOTTO (2): " + s + "\n\n");
+            PrinterUtils.Printer.debug("POPULATION SOTTO (2): " + s);
         }
         
         for (S s : rejectedIndividuals){
             if (population.contains(s))
                 myRejected.add(s);
         }
-        PrinterUtils.Printer.print(new java.util.Date() + " - Io ne devo scartare "+myRejected.size()+" dei "+rejectedIndividuals.size()+"\n\n");
+        PrinterUtils.Printer.debug("Io ne devo scartare "+myRejected.size()+" dei "+rejectedIndividuals.size());
         
         if (myRejected.size() > 0)
             strategy.applyStrategy(this, myRejected, superPareto);

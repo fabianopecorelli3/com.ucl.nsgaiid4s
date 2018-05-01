@@ -16,6 +16,7 @@ import com.superamigos.sardegna.sardegna.rejectpolicy.ReplacementRejectPolicy;
 import com.superamigos.sardegna.sardegna.rejectpolicy.ReproductionRejectPolicy;
 import com.superamigos.sardegna.sardegna.utils.GenerateExcelResultsFile;
 import com.superamigos.sardegna.sardegna.utils.GenerateLatexTablesWithStatistics;
+import com.superamigos.sardegna.sardegna.utils.GeneratePDFBoxplotsWithR;
 import com.superamigos.sardegna.sardegna.utils.SardegnaExperimentAlgorithm;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -55,7 +56,7 @@ import org.uma.jmetal.util.experiment.util.ExperimentProblem;
  */
 public class SmallRunner {
 
-    private static final int INDEPENDENT_RUNS = 2;
+    private static final int INDEPENDENT_RUNS = 5;
     private String path;
     private JavaSparkContext sparkContext;
 
@@ -109,7 +110,7 @@ public class SmallRunner {
         new GenerateLatexTablesWithStatistics(experiment).run();
         new GenerateWilcoxonTestTablesWithR<>(experiment).run();
         new GenerateFriedmanTestTables<>(experiment).run();
-        new GenerateBoxplotsWithR<>(experiment).setRows(3).setColumns(3).run();
+        new GeneratePDFBoxplotsWithR<>(experiment).setRows(1).setColumns(1).run();
         PrinterUtils.Printer.closePw();
     }
 
