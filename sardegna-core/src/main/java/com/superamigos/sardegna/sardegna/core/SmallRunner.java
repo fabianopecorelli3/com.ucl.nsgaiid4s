@@ -56,7 +56,7 @@ import org.uma.jmetal.util.experiment.util.ExperimentProblem;
  */
 public class SmallRunner {
 
-    private static final int INDEPENDENT_RUNS = 5;
+    private static final int INDEPENDENT_RUNS = 10;
     private String path;
     private JavaSparkContext sparkContext;
 

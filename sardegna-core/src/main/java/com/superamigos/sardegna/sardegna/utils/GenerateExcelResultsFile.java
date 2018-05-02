@@ -47,10 +47,15 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.math3.stat.inference.WilcoxonSignedRankTest;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellUtil;
 import org.uma.jmetal.problem.Problem;
 
 /**
@@ -161,7 +166,7 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
                     Cell cell = row.createCell(columnOffset);
 
                     String toWrite = String.format(Locale.ENGLISH, "%.4f", indicatorValue);
-                    cell.setCellValue(toWrite);
+                    cell.setCellValue(Double.parseDouble(toWrite));
                     rowNumber++;
 
                 }
@@ -179,11 +184,15 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        generateFinalExcel();
+        try {
+            generateFinalExcel();
+        } catch (InvalidFormatException ex) {
+            Logger.getLogger(GenerateExcelResultsFile.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
-    private void generateFinalExcel() throws IOException {
+    private void generateFinalExcel() throws IOException, InvalidFormatException {
         int problemListSize = experiment.getProblemList().size();
         int algorithmListSize = experiment.getAlgorithmList().size() / experiment.getProblemList().size();
         double[][][] values = new double[problemListSize][algorithmListSize][experiment.getIndependentRuns()];
@@ -201,9 +210,13 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
         } else {
             throw new FileNotFoundException();
         }
-        int offset = 0;
         int j = 0;
+
+        String fileName2 = experiment.getExperimentBaseDirectory() + "/stats.xls";
+        HSSFWorkbook wb = prepareOutputFile(fileName2);
+
         for (GenericIndicator<S> indicator : experiment.getIndicatorList()) {
+            int offset = 0;
             HSSFSheet sheet = workbook.getSheet(indicator.getName());
             values = new double[problemListSize][algorithmListSize][experiment.getIndependentRuns()];
             for (int p = 0; p < problemListSize; p++) {
@@ -215,11 +228,96 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
                 }
                 offset += experiment.getIndependentRuns();
             }
-            //calcolaIncroci(values);
+            calculatepValue(fileName2, wb, j, indicator.getName(), values);
             j++;
         }
+
+        closeOutputFile(fileName2, wb);
         //for problemList
         //compara a 2 a 2 tutte le tecniche
     }
 
+    private void calculatepValue(String fileName, HSSFWorkbook workbook, int pos, String indicatorName, double[][][] values) throws IOException, InvalidFormatException {
+        int algorithmListSize = (experiment.getAlgorithmList().size() / experiment.getProblemList().size()) - 1;
+        int problemListSize = experiment.getProblemList().size();
+        //apro file     
+        WilcoxonSignedRankTest wilcoxonSignedRankTest = new WilcoxonSignedRankTest();
+        HSSFSheet sheet = workbook.getSheet("Stats");
+        Row row = sheet.getRow(0);
+        int startcell = 2 + (pos * 2 * algorithmListSize);
+        int endcell = startcell + (2 * algorithmListSize) - 1;
+        PrinterUtils.Printer.print("WRITING " + indicatorName + " FROM " + startcell + " TO " + endcell + "\n\n\n");
+        Cell cell = row.createCell(2 + (pos * 2 * algorithmListSize));
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, startcell, endcell));
+        cell.setCellValue(indicatorName);
+        CellStyle style = cell.getCellStyle();
+        style.setAlignment(HorizontalAlignment.CENTER);
+        cell.setCellStyle(style);
+        int offset = 3;
+        for (int p = 0; p < problemListSize; p++) {
+            for (int t = 0; t < algorithmListSize; t++) {
+                double pVal = wilcoxonSignedRankTest.wilcoxonSignedRankTest(values[p][0], values[p][t+1], true);
+                sheet.getRow(offset).createCell((t * 2) + startcell).setCellValue(pVal);
+                //sheet.getRow(offset).createCell((t*2)+1).setCellValue(effectSize);
+            }
+            offset++;
+        }
+
+    }
+
+    private HSSFWorkbook prepareOutputFile(String fileName) throws IOException {
+        int algorithmListSize = (experiment.getAlgorithmList().size() / experiment.getProblemList().size());
+        File file = new File(fileName);
+        HSSFWorkbook workbook = null;
+
+        if (file.exists()) {
+            try {
+                workbook = (HSSFWorkbook) WorkbookFactory.create(file);
+            } catch (InvalidFormatException e) {
+                e.printStackTrace();
+            }
+        } else {
+            workbook = new HSSFWorkbook();
+        }
+        HSSFSheet sheet = workbook.createSheet("Stats");
+        sheet.createRow(0);
+        int offset = 2;
+        Row row = sheet.createRow(1);
+        Row row2 = sheet.createRow(2);
+
+        String firstAlgorithmTag = experiment.getAlgorithmList().get(0).getAlgorithmTag();
+        for (GenericIndicator<S> indicator : experiment.getIndicatorList()) {
+            for (int i = 1; i < algorithmListSize; i++) {
+                Cell cell = row.createCell(offset);
+                row2.createCell(offset).setCellValue("pValue");
+                row2.createCell(offset + 1).setCellValue("effectSize");
+                sheet.addMergedRegion(new CellRangeAddress(1, 1, offset, offset + 1));
+                cell.setCellValue(experiment.getAlgorithmList().get(i).getAlgorithmTag());
+                CellStyle style = cell.getCellStyle();
+                style.setAlignment(HorizontalAlignment.CENTER);
+                cell.setCellStyle(style);
+                offset += 2;
+            }
+        }
+        offset = 3;
+        for (ExperimentProblem<S> problem : experiment.getProblemList()) {
+            row = sheet.createRow(offset++);
+            row.createCell(0).setCellValue(problem.getTag());
+            row.createCell(1).setCellValue(firstAlgorithmTag);
+        }
+        return workbook;
+    }
+
+    private void closeOutputFile(String fileName, HSSFWorkbook workbook) {
+        try {
+            FileOutputStream outputStream = new FileOutputStream(fileName);
+            workbook.write(outputStream);
+            workbook.close();
+            outputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
