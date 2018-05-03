@@ -242,11 +242,12 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
         int problemListSize = experiment.getProblemList().size();
         //apro file     
         WilcoxonSignedRankTest wilcoxonSignedRankTest = new WilcoxonSignedRankTest();
+
         HSSFSheet sheet = workbook.getSheet("Stats");
         Row row = sheet.getRow(0);
         int startcell = 2 + (pos * 2 * algorithmListSize);
         int endcell = startcell + (2 * algorithmListSize) - 1;
-        PrinterUtils.Printer.print("WRITING " + indicatorName + " FROM " + startcell + " TO " + endcell + "\n\n\n");
+        PrinterUtils.Printer.debug("WRITING " + indicatorName + " FROM " + startcell + " TO " + endcell + "\n\n\n");
         Cell cell = row.createCell(2 + (pos * 2 * algorithmListSize));
         sheet.addMergedRegion(new CellRangeAddress(0, 0, startcell, endcell));
         cell.setCellValue(indicatorName);
@@ -256,9 +257,9 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
         int offset = 3;
         for (int p = 0; p < problemListSize; p++) {
             for (int t = 0; t < algorithmListSize; t++) {
-                double pVal = wilcoxonSignedRankTest.wilcoxonSignedRankTest(values[p][0], values[p][t+1], true);
+                double pVal = wilcoxonSignedRankTest.wilcoxonSignedRankTest(values[p][0], values[p][t + 1], true);
                 sheet.getRow(offset).createCell((t * 2) + startcell).setCellValue(pVal);
-                //sheet.getRow(offset).createCell((t*2)+1).setCellValue(effectSize);
+                sheet.getRow(offset).createCell((t * 2) + startcell+1).setCellValue(VarghaDelaneyEffSize.varghaDelaneyEffSize(values[p][0], values[p][t + 1]));
             }
             offset++;
         }
@@ -320,4 +321,5 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
             e.printStackTrace();
         }
     }
+
 }
