@@ -20,8 +20,7 @@ public class ReproductionRejectPolicy<S extends Solution> implements RejectPolic
 
     @Override
     public void applyStrategy(ModifiedAbstractGeneticAlgorithm<S> algorithm, List<S> rejectedIndividuals, List<S> superPareto) {
-        PrinterUtils.Printer.debug("Sto scartando qualcosa");
-
+      
         int numberOfParents = algorithm.getCrossoverOperator().getNumberOfParents();
         algorithm.checkNumberOfParents(algorithm.getPopulation(), numberOfParents);
         List<S> population = algorithm.getPopulation();

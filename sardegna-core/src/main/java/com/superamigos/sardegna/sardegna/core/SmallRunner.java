@@ -71,7 +71,8 @@ public class SmallRunner {
     public void run() throws FileNotFoundException, IOException {
         String experimentBaseDirectory = path;
 
-        PrinterUtils.Printer.setPw("my-log.txt");
+        PrinterUtils.Printer.setMasterPw(experimentBaseDirectory+"/master-log.txt");
+        PrinterUtils.Printer.setWorkersPw(experimentBaseDirectory+"/workers-log.txt");
 
         List<ExperimentProblem<DoubleSolution>> problemList = new ArrayList<>();
         problemList.add(new ExperimentProblem<>(new ZDT1()));

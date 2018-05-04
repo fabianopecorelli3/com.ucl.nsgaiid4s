@@ -51,7 +51,7 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
         super(problem);
         this.numberOfPartitions = numberOfPartitions;
         this.algorithms = new ArrayList<>();
-        
+
         for (int i = 0; i < numberOfPartitions; i++) {
             algorithms.add(new SardegnaNSGAIIBuilder<S>(
                     problem,
@@ -61,7 +61,7 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
                     .setPopulationSize(populationSize / numberOfPartitions)
                     .build());
         }
-        
+
         this.pareto = new ArrayList<S>();
         this.populationSize = populationSize;
         this.sparkContext = sparkContext;
@@ -79,21 +79,24 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
 
         int i = 0;
         while (!isStoppingConditionReached()) {
-
-            PrinterUtils.Printer.debug("EXECUTING ITERATION " + i);
+            long timeStartIteration = System.currentTimeMillis();
+            PrinterUtils.Printer.info("Start iteration #" + i,true);
 
             algorithmsToParallelize = sparkContext.parallelize(algorithms, numberOfPartitions);
 
             algorithmsToParallelize = algorithmsToParallelize.map(algorithm -> {
                 if (rejectedIndividuals.size() > 0) {
-                    PrinterUtils.Printer.debug("I rejcted inviati sono " + rejectedIndividuals.size());
                     algorithm.receiveRejectedIndividuals(rejectedIndividuals, rejectPolicy, pareto);
                 }
+
                 algorithm.executeIteration();
                 return algorithm;
             });
 
+            long timeStartCollect = System.currentTimeMillis();
+            PrinterUtils.Printer.info("START Collect phase", true);
             algorithms = algorithmsToParallelize.collect();
+            PrinterUtils.Printer.info("ENDED Collect phase in: " + (System.currentTimeMillis() - timeStartCollect) + " ms", true);
 
             algorithmsToParallelize = sparkContext.parallelize(algorithms, numberOfPartitions);
 
@@ -105,14 +108,15 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
                 return computeSuperPareto(a, b);
             });
 
-            
             /*PrinterUtils.Printer.print("PARETO AT ITERATION " + i + ":\n\n");
             for (S s : pareto) {
                 PrinterUtils.Printer.print(s.getObjective(0) + " - ");
                 PrinterUtils.Printer.print(s.getObjective(1) + "\n\n");
             }*/
             updateProgress();
+            PrinterUtils.Printer.info("ENDED Iteration #"+i+" in: " + (System.currentTimeMillis() - timeStartIteration) + " ms", true);
             i++;
+
         }
     }
 
@@ -173,9 +177,6 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
                 ranking.setAttribute(s, 0);
                 rejectedIndividuals.add(s);
             }
-        }
-        for (S s : rejectedIndividuals) {
-            PrinterUtils.Printer.debug("REJECTED: " + s);
         }
         return nonDominated;
     }

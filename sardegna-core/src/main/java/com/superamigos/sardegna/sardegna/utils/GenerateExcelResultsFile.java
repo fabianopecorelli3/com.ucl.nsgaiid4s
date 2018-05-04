@@ -5,6 +5,7 @@
  */
 package com.superamigos.sardegna.sardegna.utils;
 
+import java.io.BufferedReader;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.uma.jmetal.qualityindicator.QualityIndicator;
@@ -25,8 +26,10 @@ import org.uma.jmetal.util.point.util.PointSolution;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -48,6 +51,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math3.stat.inference.WilcoxonSignedRankTest;
+import org.apache.commons.math3.util.Precision;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -94,10 +98,27 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
         } else {
             workbook = new HSSFWorkbook();
         }
+        ArrayList<GenericIndicator<S>> indicators = new ArrayList<>();
+        indicators.addAll(experiment.getIndicatorList());
+        indicators.add(new GenericIndicator<S>() {
+            @Override
+            public boolean isTheLowerTheIndicatorValueTheBetter() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
 
-        for (GenericIndicator<S> indicator : experiment.getIndicatorList()) {
+            @Override
+            public Double evaluate(List<S> evlt) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+            
+            @Override
+            public String getName() {
+                return "TIMES";
+            }
+        });
+        for (GenericIndicator<S> indicator : indicators) {
             String indicatorName = indicator.getName();
-            //creo foglio
+            
             int rowNumber = 0;
             HSSFSheet sheet = workbook.createSheet(indicatorName);
             Row row = sheet.createRow(rowNumber++);
@@ -138,35 +159,36 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
                         + algorithm.getAlgorithmTag();
 
                 String problemDirectory = algorithmDirectory + "/" + problemName;
-                String referenceFrontDirectory = experiment.getReferenceFrontDirectory();
-                String referenceFrontName = referenceFrontDirectory
+    //            String referenceFrontDirectory = experiment.getReferenceFrontDirectory();
+/*                String referenceFrontName = referenceFrontDirectory
                         + "/" + experiment.getReferenceFrontFileNames().get(problemId);
-
-                JMetalLogger.logger.info("RF: " + referenceFrontName);;
+*/
+  //              JMetalLogger.logger.info("RF: " + referenceFrontName);;
 
                 String qualityIndicatorFile = problemDirectory + "/" + indicator.getName();
 
-                Front referenceFront = new ArrayFront(referenceFrontName);
+    //            Front referenceFront = new ArrayFront(referenceFrontName);
+                BufferedReader indicatorFile = new BufferedReader(new FileReader(qualityIndicatorFile));
+  //              FrontNormalizer frontNormalizer = new FrontNormalizer(referenceFront);
+//                Front normalizedReferenceFront = frontNormalizer.normalize(referenceFront);
 
-                FrontNormalizer frontNormalizer = new FrontNormalizer(referenceFront);
-                Front normalizedReferenceFront = frontNormalizer.normalize(referenceFront);
-
-                indicator.setReferenceParetoFront(normalizedReferenceFront);
+     //           indicator.setReferenceParetoFront(normalizedReferenceFront);
                 for (int run = 0; run < experiment.getIndependentRuns(); run++) {
-                    String frontFileName = problemDirectory + "/"
+                    double indicatorValue = Double.parseDouble(indicatorFile.readLine());
+                   /*String frontFileName = problemDirectory + "/"
                             + experiment.getOutputParetoFrontFileName() + run + ".tsv";
-
-                    Front front = new ArrayFront(frontFileName);
-                    Front normalizedFront = frontNormalizer.normalize(front);
-                    List<PointSolution> normalizedPopulation = FrontUtils.convertFrontToSolutionList(normalizedFront);
-                    Double indicatorValue = (Double) indicator.evaluate((List<S>) normalizedPopulation);
+*/
+  //              Front front = new ArrayFront(frontFileName);
+   //                 Front normalizedFront = frontNormalizer.normalize(front);
+     //               List<PointSolution> normalizedPopulation = FrontUtils.convertFrontToSolutionList(normalizedFront);
+   //                 Double indicatorValue = (Double) indicator.evaluate((List<S>) normalizedPopulation);
                     JMetalLogger.logger.info(indicator.getName() + ": " + indicatorValue);
 
                     row = sheet.getRow(rowNumber + rowOffset);
                     Cell cell = row.createCell(columnOffset);
 
-                    String toWrite = String.format(Locale.ENGLISH, "%.4f", indicatorValue);
-                    cell.setCellValue(Double.parseDouble(toWrite));
+               //     String toWrite = String.format(Locale.ENGLISH, "%.4f", indicatorValue);
+                    cell.setCellValue(Precision.round(indicatorValue,4));
                     rowNumber++;
 
                 }
@@ -185,14 +207,14 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
             e.printStackTrace();
         }
         try {
-            generateFinalExcel();
+            generateFinalExcel(indicators);
         } catch (InvalidFormatException ex) {
             Logger.getLogger(GenerateExcelResultsFile.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
-    private void generateFinalExcel() throws IOException, InvalidFormatException {
+    private void generateFinalExcel(List<GenericIndicator<S>> indicators) throws IOException, InvalidFormatException {
         int problemListSize = experiment.getProblemList().size();
         int algorithmListSize = experiment.getAlgorithmList().size() / experiment.getProblemList().size();
         double[][][] values = new double[problemListSize][algorithmListSize][experiment.getIndependentRuns()];
@@ -213,9 +235,9 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
         int j = 0;
 
         String fileName2 = experiment.getExperimentBaseDirectory() + "/stats.xls";
-        HSSFWorkbook wb = prepareOutputFile(fileName2);
+        HSSFWorkbook wb = prepareOutputFile(fileName2, indicators);
 
-        for (GenericIndicator<S> indicator : experiment.getIndicatorList()) {
+        for (GenericIndicator<S> indicator : indicators) {
             int offset = 0;
             HSSFSheet sheet = workbook.getSheet(indicator.getName());
             values = new double[problemListSize][algorithmListSize][experiment.getIndependentRuns()];
@@ -247,7 +269,6 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
         Row row = sheet.getRow(0);
         int startcell = 2 + (pos * 2 * algorithmListSize);
         int endcell = startcell + (2 * algorithmListSize) - 1;
-        PrinterUtils.Printer.debug("WRITING " + indicatorName + " FROM " + startcell + " TO " + endcell + "\n\n\n");
         Cell cell = row.createCell(2 + (pos * 2 * algorithmListSize));
         sheet.addMergedRegion(new CellRangeAddress(0, 0, startcell, endcell));
         cell.setCellValue(indicatorName);
@@ -259,14 +280,14 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
             for (int t = 0; t < algorithmListSize; t++) {
                 double pVal = wilcoxonSignedRankTest.wilcoxonSignedRankTest(values[p][0], values[p][t + 1], true);
                 sheet.getRow(offset).createCell((t * 2) + startcell).setCellValue(pVal);
-                sheet.getRow(offset).createCell((t * 2) + startcell+1).setCellValue(VarghaDelaneyEffSize.varghaDelaneyEffSize(values[p][0], values[p][t + 1]));
+                sheet.getRow(offset).createCell((t * 2) + startcell+1).setCellValue(Precision.round(VarghaDelaneyEffSize.varghaDelaneyEffSize(values[p][0], values[p][t + 1]),2));
             }
             offset++;
         }
 
     }
 
-    private HSSFWorkbook prepareOutputFile(String fileName) throws IOException {
+    private HSSFWorkbook prepareOutputFile(String fileName, List<GenericIndicator<S>> indicators) throws IOException {
         int algorithmListSize = (experiment.getAlgorithmList().size() / experiment.getProblemList().size());
         File file = new File(fileName);
         HSSFWorkbook workbook = null;
@@ -287,7 +308,7 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
         Row row2 = sheet.createRow(2);
 
         String firstAlgorithmTag = experiment.getAlgorithmList().get(0).getAlgorithmTag();
-        for (GenericIndicator<S> indicator : experiment.getIndicatorList()) {
+        for (GenericIndicator<S> indicator : indicators) {
             for (int i = 1; i < algorithmListSize; i++) {
                 Cell cell = row.createCell(offset);
                 row2.createCell(offset).setCellValue("pValue");

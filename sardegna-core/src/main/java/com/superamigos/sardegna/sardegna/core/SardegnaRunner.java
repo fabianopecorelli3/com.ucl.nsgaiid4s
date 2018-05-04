@@ -17,6 +17,7 @@ import com.superamigos.sardegna.sardegna.rejectpolicy.ReproductionRejectPolicy;
 import com.superamigos.sardegna.sardegna.utils.GenerateExcelResultsFile;
 import com.superamigos.sardegna.sardegna.utils.GenerateLatexTablesWithStatistics;
 import com.superamigos.sardegna.sardegna.utils.GeneratePDFBoxplotsWithR;
+import com.superamigos.sardegna.sardegna.utils.SardegnaExperimentAlgorithm;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +28,25 @@ import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAIIBuilder;
 import org.uma.jmetal.operator.impl.crossover.SBXCrossover;
 import org.uma.jmetal.operator.impl.mutation.PolynomialMutation;
+import org.uma.jmetal.problem.multiobjective.Binh2;
+import org.uma.jmetal.problem.multiobjective.Golinski;
+import org.uma.jmetal.problem.multiobjective.Kursawe;
+import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ1;
+import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ2;
+import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3;
+import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4;
+import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ5;
+import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ6;
+import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ7;
+import org.uma.jmetal.problem.multiobjective.lz09.LZ09F1;
+import org.uma.jmetal.problem.multiobjective.lz09.LZ09F2;
+import org.uma.jmetal.problem.multiobjective.lz09.LZ09F3;
+import org.uma.jmetal.problem.multiobjective.lz09.LZ09F4;
+import org.uma.jmetal.problem.multiobjective.lz09.LZ09F5;
+import org.uma.jmetal.problem.multiobjective.lz09.LZ09F6;
+import org.uma.jmetal.problem.multiobjective.lz09.LZ09F7;
+import org.uma.jmetal.problem.multiobjective.lz09.LZ09F8;
+import org.uma.jmetal.problem.multiobjective.lz09.LZ09F9;
 import org.uma.jmetal.problem.multiobjective.wfg.WFG1;
 import org.uma.jmetal.problem.multiobjective.wfg.WFG2;
 import org.uma.jmetal.problem.multiobjective.wfg.WFG3;
@@ -36,6 +56,11 @@ import org.uma.jmetal.problem.multiobjective.wfg.WFG6;
 import org.uma.jmetal.problem.multiobjective.wfg.WFG7;
 import org.uma.jmetal.problem.multiobjective.wfg.WFG8;
 import org.uma.jmetal.problem.multiobjective.wfg.WFG9;
+import org.uma.jmetal.problem.multiobjective.zdt.ZDT1;
+import org.uma.jmetal.problem.multiobjective.zdt.ZDT2;
+import org.uma.jmetal.problem.multiobjective.zdt.ZDT3;
+import org.uma.jmetal.problem.multiobjective.zdt.ZDT4;
+import org.uma.jmetal.problem.multiobjective.zdt.ZDT6;
 import org.uma.jmetal.qualityindicator.impl.Epsilon;
 import org.uma.jmetal.qualityindicator.impl.GenerationalDistance;
 import org.uma.jmetal.qualityindicator.impl.InvertedGenerationalDistance;
@@ -57,16 +82,16 @@ import org.uma.jmetal.util.experiment.util.ExperimentProblem;
  *
  * @author fably
  */
-public class SardegnaWFGRunner {
+public class SardegnaRunner {
 
-    private static final int INDEPENDENT_RUNS = 10;
+    private static final int INDEPENDENT_RUNS = 30;
     private String path;
     private JavaSparkContext sparkContext;
 
-    public SardegnaWFGRunner() {
+    public SardegnaRunner() {
     }
 
-    public SardegnaWFGRunner(String path, JavaSparkContext sparkContext) {
+    public SardegnaRunner(String path, JavaSparkContext sparkContext) {
         this.path = path;
         this.sparkContext = sparkContext;
     }
@@ -75,9 +100,14 @@ public class SardegnaWFGRunner {
         String experimentBaseDirectory = path;
 
         PrinterUtils.Printer.setMasterPw(experimentBaseDirectory+"/master-log.txt");
-        PrinterUtils.Printer.setMasterPw(experimentBaseDirectory+"/workers-log.txt");
+        PrinterUtils.Printer.setWorkersPw(experimentBaseDirectory+"/workers-log.txt");
 
         List<ExperimentProblem<DoubleSolution>> problemList = new ArrayList<>();
+        problemList.add(new ExperimentProblem<>(new ZDT1()));
+        problemList.add(new ExperimentProblem<>(new ZDT2()));
+        problemList.add(new ExperimentProblem<>(new ZDT3()));
+        problemList.add(new ExperimentProblem<>(new ZDT4()));
+        problemList.add(new ExperimentProblem<>(new ZDT6()));
         problemList.add(new ExperimentProblem<>(new WFG1()));
         problemList.add(new ExperimentProblem<>(new WFG2()));
         problemList.add(new ExperimentProblem<>(new WFG3()));
@@ -87,10 +117,13 @@ public class SardegnaWFGRunner {
         problemList.add(new ExperimentProblem<>(new WFG7()));
         problemList.add(new ExperimentProblem<>(new WFG8()));
         problemList.add(new ExperimentProblem<>(new WFG9()));
+        problemList.add(new ExperimentProblem<>(new Binh2()));
+        problemList.add(new ExperimentProblem<>(new Golinski()));
+        problemList.add(new ExperimentProblem<>(new Kursawe()));
 
         List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithmList
                 = configureAlgorithmList(problemList);
-        List<String> referenceFrontFileNames = Arrays.asList("WFG1.2D.pf", "WFG2.2D.pf", "WFG3.2D.pf", "WFG4.2D.pf", "WFG5.2D.pf", "WFG6.2D.pf", "WFG7.2D.pf", "WFG8.2D.pf", "WFG9.2D.pf");
+        List<String> referenceFrontFileNames = Arrays.asList("ZDT1.pf", "ZDT2.pf", "ZDT3.pf", "ZDT4.pf", "ZDT6.pf", "WFG1.2D.pf", "WFG2.2D.pf", "WFG3.2D.pf", "WFG4.2D.pf", "WFG5.2D.pf", "WFG6.2D.pf", "WFG7.2D.pf", "WFG8.2D.pf", "WFG9.2D.pf", "Binh2.pf", "Golinski.pf", "Kursawe.pf");
 
         Experiment<DoubleSolution, List<DoubleSolution>> experiment
                 = new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>("NSGAIIStudy")
@@ -143,7 +176,7 @@ public class SardegnaWFGRunner {
                     .setMaxEvaluations(25000)
                     .setPopulationSize(250)
                     .build();
-            algorithms.add(new ExperimentAlgorithm<>(algorithm, "jMetal", problemList.get(i).getTag()));
+            algorithms.add(new SardegnaExperimentAlgorithm<>(algorithm, "jMetal", problemList.get(i).getTag()));
             Algorithm<List<DoubleSolution>> sardegna_RR = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
                     25000,
@@ -154,7 +187,7 @@ public class SardegnaWFGRunner {
                     new SardegnaSBXCrossover(1.0, 5),
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
-            algorithms.add(new ExperimentAlgorithm<>(sardegna_RR, "RandomReplacement", problemList.get(i).getTag()));
+            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_RR, "RR", problemList.get(i).getTag()));
             Algorithm<List<DoubleSolution>> sardegna_REPL = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
                     25000,
@@ -165,7 +198,7 @@ public class SardegnaWFGRunner {
                     new SardegnaSBXCrossover(1.0, 5),
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
-            algorithms.add(new ExperimentAlgorithm<>(sardegna_REPL, "Replacement", problemList.get(i).getTag()));
+            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_REPL, "REPL", problemList.get(i).getTag()));
             Algorithm<List<DoubleSolution>> sardegna_DR = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
                     25000,
@@ -176,7 +209,7 @@ public class SardegnaWFGRunner {
                     new SardegnaSBXCrossover(1.0, 5),
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
-            algorithms.add(new ExperimentAlgorithm<>(sardegna_DR, "DominanceRanking", problemList.get(i).getTag()));
+            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_DR, "DR", problemList.get(i).getTag()));
             Algorithm<List<DoubleSolution>> sardegna_REPR = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
                     25000,
@@ -187,7 +220,7 @@ public class SardegnaWFGRunner {
                     new SardegnaSBXCrossover(1.0, 5),
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
-            algorithms.add(new ExperimentAlgorithm<>(sardegna_REPR, "Reproduction", problemList.get(i).getTag()));
+            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_REPR, "REPR", problemList.get(i).getTag()));
             Algorithm<List<DoubleSolution>> sardegna_RM = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
                     25000,
@@ -198,7 +231,7 @@ public class SardegnaWFGRunner {
                     new SardegnaSBXCrossover(1.0, 5),
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
-            algorithms.add(new ExperimentAlgorithm<>(sardegna_RM, "Remove", problemList.get(i).getTag()));
+            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_RM, "REM", problemList.get(i).getTag()));
         }
         return algorithms;
     }

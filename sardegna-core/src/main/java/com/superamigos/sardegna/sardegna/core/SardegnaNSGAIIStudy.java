@@ -1,11 +1,6 @@
 package com.superamigos.sardegna.sardegna.core;
 
 import com.superamigos.sardegna.sardegna.rejectpolicy.RejectPolicy;
-import com.superamigos.sardegna.sardegna.rejectpolicy.DominanceRankingRejectPolicy;
-import com.superamigos.sardegna.sardegna.rejectpolicy.RandomReplacementRejectPolicy;
-import com.superamigos.sardegna.sardegna.rejectpolicy.RemoveRejectPolicy;
-import com.superamigos.sardegna.sardegna.rejectpolicy.ReplacementRejectPolicy;
-import com.superamigos.sardegna.sardegna.rejectpolicy.ReproductionRejectPolicy;
 import org.uma.jmetal.util.JMetalException;
 
 import java.io.IOException;
@@ -40,7 +35,7 @@ public class SardegnaNSGAIIStudy {
     JavaSparkContext sparkContext = new JavaSparkContext(sparkConf);
     
 //    RejectPolicy policy = new RandomReplacementRejectPolicy();
-    SmallRunner runner =  new SmallRunner(experimentBaseDirectory, sparkContext);
+    SardegnaRunner runner =  new SardegnaRunner(experimentBaseDirectory, sparkContext);
     runner.run();
     
   }

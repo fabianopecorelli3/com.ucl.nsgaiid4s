@@ -74,7 +74,6 @@ public class GeneratePDFBoxplotsWithR<Result> implements ExperimentComponent {
         }
         for (GenericIndicator<? extends Solution<?>> indicator : experiment.getIndicatorList()) {
             String rFileName = rDirectoryName + "/" + indicator.getName() + ".Boxplot" + ".R";
-            PrinterUtils.Printer.debug("FINALPATH: " + finalPath);
             FileWriter os = new FileWriter(rFileName, false);
             os.write("pdf(\""
                     + finalPath
@@ -141,7 +140,6 @@ public class GeneratePDFBoxplotsWithR<Result> implements ExperimentComponent {
 
     public void runRScript(String fileRPath) {
         try {
-            PrinterUtils.Printer.info("ESEGUO IL FILE R: " + fileRPath);
             Runtime.getRuntime().exec("Rscript " + fileRPath);
         } catch (IOException ex) {
             Logger.getLogger(GeneratePDFBoxplotsWithR.class.getName()).log(Level.SEVERE, null, ex);
@@ -154,7 +152,6 @@ public class GeneratePDFBoxplotsWithR<Result> implements ExperimentComponent {
         String finalPath = experiment.getExperimentBaseDirectory().replaceAll("\\\\", "/");
 
         String rFileName = rDirectoryName + "/TIMES.Boxplot" + ".R";
-        PrinterUtils.Printer.debug("FINALPATH: " + finalPath);
         FileWriter os = new FileWriter(rFileName, false);
         os.write("pdf(\""
                 + finalPath

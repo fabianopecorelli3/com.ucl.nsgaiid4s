@@ -32,7 +32,6 @@ public abstract class ModifiedAbstractGeneticAlgorithm<S extends Solution> exten
      */
     public void startExecution() {
 
-        PrinterUtils.Printer.debug("My population size: " + getMaxPopulationSize());
         population = createInitialPopulation();
         population = evaluatePopulation(population);
     }
@@ -45,14 +44,31 @@ public abstract class ModifiedAbstractGeneticAlgorithm<S extends Solution> exten
 
         List<S> offspringPopulation;
         List<S> matingPopulation;
+
+        long timeStartSelection = System.currentTimeMillis();
+        PrinterUtils.Printer.info("START Selection phase", false);
         matingPopulation = selection(population);
+        PrinterUtils.Printer.info("ENDED Selection phase in: " + (System.currentTimeMillis() - timeStartSelection)+ " ms", false);
+
+        long timeStartReproduction = System.currentTimeMillis();
+        PrinterUtils.Printer.info("START Reproduction phase", false);
         offspringPopulation = reproduction(matingPopulation);
+        PrinterUtils.Printer.info("ENDED Reproduction phase in: " + (System.currentTimeMillis() - timeStartReproduction)+ " ms", false);
+
+        long timeStartEvaluation = System.currentTimeMillis();
+        PrinterUtils.Printer.info("START Evaluation phase", false);
         offspringPopulation = evaluatePopulation(offspringPopulation);
+        PrinterUtils.Printer.info("ENDED Evaluation phase in: " + (System.currentTimeMillis() - timeStartEvaluation)+ " ms", false);
+
+        long timeStartReplacement = System.currentTimeMillis();
+        PrinterUtils.Printer.info("START Replacement phase", false);
         population = replacement(population, offspringPopulation);
+        PrinterUtils.Printer.info("ENDED Evaluation phase in: " + (System.currentTimeMillis() - timeStartEvaluation)+ " ms", false);
+
     }
 
     abstract public List<S> extraEvaluation(List<S> solutionList);
-    
+
     abstract public void computePareto();
 
     abstract public void receiveRejectedIndividuals(List<S> rejectedIndividuals, RejectPolicy strategy, List<S> superPareto);

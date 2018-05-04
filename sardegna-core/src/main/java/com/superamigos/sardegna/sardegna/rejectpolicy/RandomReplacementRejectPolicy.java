@@ -19,7 +19,6 @@ public class RandomReplacementRejectPolicy<S extends Solution> implements Reject
 
     @Override
     public void applyStrategy(ModifiedAbstractGeneticAlgorithm<S> algorithm, List<S> rejectedIndividuals, List<S> superPareto) {
-        PrinterUtils.Printer.debug("Sto rimpiazzando qualcosa");
         int howMuch = rejectedIndividuals.size();
         List<S> population = algorithm.getPopulation();
         List<S> newIndividuals = new ArrayList<>();
@@ -29,9 +28,7 @@ public class RandomReplacementRejectPolicy<S extends Solution> implements Reject
             newIndividuals.add(newIndividual);
         }
         newIndividuals = algorithm.extraEvaluation(newIndividuals);
-        for (S s : newIndividuals){
-            PrinterUtils.Printer.debug("NEW INDIVIDUAL: "+s.getObjective(0));
-        }
+      
         population.addAll(newIndividuals);
         algorithm.setPopulation(population);
     }

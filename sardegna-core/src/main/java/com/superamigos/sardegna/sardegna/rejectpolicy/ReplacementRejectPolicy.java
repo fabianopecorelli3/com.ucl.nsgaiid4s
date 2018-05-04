@@ -18,7 +18,6 @@ public class ReplacementRejectPolicy<S extends Solution> implements RejectPolicy
 
     @Override
     public void applyStrategy(ModifiedAbstractGeneticAlgorithm<S> algorithm, List<S> rejectedIndividuals, List<S> superPareto) {
-        PrinterUtils.Printer.debug("Sto rimpiazzando qualcosa");
         int howMuch = rejectedIndividuals.size();
         List<S> population = algorithm.getPopulation();
         population.removeAll(rejectedIndividuals);

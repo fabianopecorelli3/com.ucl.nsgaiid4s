@@ -16,6 +16,7 @@ import com.superamigos.sardegna.sardegna.rejectpolicy.ReplacementRejectPolicy;
 import com.superamigos.sardegna.sardegna.rejectpolicy.ReproductionRejectPolicy;
 import com.superamigos.sardegna.sardegna.utils.GenerateExcelResultsFile;
 import com.superamigos.sardegna.sardegna.utils.GenerateLatexTablesWithStatistics;
+import com.superamigos.sardegna.sardegna.utils.GeneratePDFBoxplotsWithR;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -69,7 +70,8 @@ public class SardegnaZDTRunner {
     public void run() throws FileNotFoundException, IOException {
         String experimentBaseDirectory = path;
 
-        PrinterUtils.Printer.setPw("my-log.txt");
+        PrinterUtils.Printer.setMasterPw(experimentBaseDirectory+"/master-log.txt");
+        PrinterUtils.Printer.setMasterPw(experimentBaseDirectory+"/workers-log.txt");
 
         List<ExperimentProblem<DoubleSolution>> problemList = new ArrayList<>();
         problemList.add(new ExperimentProblem<>(new ZDT1()));
@@ -108,7 +110,7 @@ public class SardegnaZDTRunner {
         new GenerateLatexTablesWithStatistics(experiment).run();
         new GenerateWilcoxonTestTablesWithR<>(experiment).run();
         new GenerateFriedmanTestTables<>(experiment).run();
-        new GenerateBoxplotsWithR<>(experiment).setRows(3).setColumns(3).run();
+        new GeneratePDFBoxplotsWithR<>(experiment).setRows(1).setColumns(1).run();
         PrinterUtils.Printer.closePw();
     }
 
