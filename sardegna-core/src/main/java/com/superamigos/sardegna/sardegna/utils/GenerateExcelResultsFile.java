@@ -6,48 +6,26 @@
 package com.superamigos.sardegna.sardegna.utils;
 
 import java.io.BufferedReader;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.uma.jmetal.qualityindicator.QualityIndicator;
 import org.uma.jmetal.qualityindicator.impl.GenericIndicator;
 import org.uma.jmetal.solution.Solution;
-import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.util.JMetalLogger;
 import org.uma.jmetal.util.experiment.Experiment;
 import org.uma.jmetal.util.experiment.ExperimentComponent;
 import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
-import org.uma.jmetal.util.front.Front;
-import org.uma.jmetal.util.front.imp.ArrayFront;
-import org.uma.jmetal.util.front.util.FrontNormalizer;
-import org.uma.jmetal.util.front.util.FrontUtils;
-import org.uma.jmetal.util.point.util.PointSolution;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
-import java.lang.reflect.Array;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import java.util.HashMap;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math3.stat.inference.WilcoxonSignedRankTest;
@@ -59,8 +37,6 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.CellUtil;
-import org.uma.jmetal.problem.Problem;
 
 /**
  * This class computes the {@link QualityIndicator}s of an experiment. Once the
@@ -279,8 +255,13 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
         for (int p = 0; p < problemListSize; p++) {
             for (int t = 0; t < algorithmListSize; t++) {
                 double pVal = wilcoxonSignedRankTest.wilcoxonSignedRankTest(values[p][0], values[p][t + 1], true);
-                sheet.getRow(offset).createCell((t * 2) + startcell).setCellValue(pVal);
-                sheet.getRow(offset).createCell((t * 2) + startcell+1).setCellValue(Precision.round(VarghaDelaneyEffSize.varghaDelaneyEffSize(values[p][0], values[p][t + 1]),2));
+
+                String pVal5Dec = String.format(Locale.ENGLISH, "%.5f", pVal);
+                String effsize2Dec = String.format(Locale.ENGLISH, "%.2f", VarghaDelaneyEffSize.varghaDelaneyEffSize(values[p][0], values[p][t + 1]));
+
+
+                sheet.getRow(offset).createCell((t * 2) + startcell).setCellValue(pVal5Dec);
+                sheet.getRow(offset).createCell((t * 2) + startcell+1).setCellValue(effsize2Dec);
             }
             offset++;
         }

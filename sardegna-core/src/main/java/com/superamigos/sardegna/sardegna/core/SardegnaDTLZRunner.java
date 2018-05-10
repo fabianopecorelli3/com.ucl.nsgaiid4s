@@ -35,11 +35,6 @@ import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ4;
 import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ5;
 import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ6;
 import org.uma.jmetal.problem.multiobjective.dtlz.DTLZ7;
-import org.uma.jmetal.problem.multiobjective.zdt.ZDT1;
-import org.uma.jmetal.problem.multiobjective.zdt.ZDT2;
-import org.uma.jmetal.problem.multiobjective.zdt.ZDT3;
-import org.uma.jmetal.problem.multiobjective.zdt.ZDT4;
-import org.uma.jmetal.problem.multiobjective.zdt.ZDT6;
 import org.uma.jmetal.qualityindicator.impl.Epsilon;
 import org.uma.jmetal.qualityindicator.impl.GenerationalDistance;
 import org.uma.jmetal.qualityindicator.impl.InvertedGenerationalDistance;
@@ -51,7 +46,6 @@ import org.uma.jmetal.util.experiment.Experiment;
 import org.uma.jmetal.util.experiment.ExperimentBuilder;
 import org.uma.jmetal.util.experiment.component.ComputeQualityIndicators;
 import org.uma.jmetal.util.experiment.component.ExecuteAlgorithms;
-import org.uma.jmetal.util.experiment.component.GenerateBoxplotsWithR;
 import org.uma.jmetal.util.experiment.component.GenerateFriedmanTestTables;
 import org.uma.jmetal.util.experiment.component.GenerateWilcoxonTestTablesWithR;
 import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
@@ -61,16 +55,16 @@ import org.uma.jmetal.util.experiment.util.ExperimentProblem;
  *
  * @author fably
  */
-public class SmallRunner {
+public class SardegnaDTLZRunner {
 
     private static final int INDEPENDENT_RUNS = 2;
     private String path;
     private JavaSparkContext sparkContext;
 
-    public SmallRunner() {
+    public SardegnaDTLZRunner() {
     }
 
-    public SmallRunner(String path, JavaSparkContext sparkContext) {
+    public SardegnaDTLZRunner(String path, JavaSparkContext sparkContext) {
         this.path = path;
         this.sparkContext = sparkContext;
     }
@@ -78,15 +72,10 @@ public class SmallRunner {
     public void run() throws FileNotFoundException, IOException {
         String experimentBaseDirectory = path;
 
-        PrinterUtils.Printer.setMasterPw(experimentBaseDirectory+"/master-log.txt");
-        PrinterUtils.Printer.setWorkersPw(experimentBaseDirectory+"/workers-log.txt");
+        PrinterUtils.Printer.setMasterPw(experimentBaseDirectory+"/DTLZ-master-log.txt");
+        PrinterUtils.Printer.setWorkersPw(experimentBaseDirectory+"/DTLZ-workers-log.txt");
 
         List<ExperimentProblem<DoubleSolution>> problemList = new ArrayList<>();
-        problemList.add(new ExperimentProblem<>(new ZDT1()));
-        problemList.add(new ExperimentProblem<>(new ZDT2()));
-        problemList.add(new ExperimentProblem<>(new ZDT3()));
-        problemList.add(new ExperimentProblem<>(new ZDT4()));
-        problemList.add(new ExperimentProblem<>(new ZDT6()));
         problemList.add(new ExperimentProblem<>(new DTLZ1()));
         problemList.add(new ExperimentProblem<>(new DTLZ2()));
         problemList.add(new ExperimentProblem<>(new DTLZ3()));
@@ -94,14 +83,13 @@ public class SmallRunner {
         problemList.add(new ExperimentProblem<>(new DTLZ5()));
         problemList.add(new ExperimentProblem<>(new DTLZ6()));
         problemList.add(new ExperimentProblem<>(new DTLZ7()));
-        
-        
+
         List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithmList
                 = configureAlgorithmList(problemList);
-        List<String> referenceFrontFileNames = Arrays.asList("ZDT1.pf", "ZDT2.pf", "ZDT3.pf", "ZDT4.pf", "ZDT6.pf","DTLZ1.3D.pf", "DTLZ2.3D.pf", "DTLZ3.3D.pf", "DTLZ4.3D.pf", "DTLZ5.3D.pf","DTLZ6.3D.pf","DTLZ7.3D.pf");
+        List<String> referenceFrontFileNames = Arrays.asList("DTLZ1.3D.pf", "DTLZ2.3D.pf", "DTLZ3.3D.pf", "DTLZ4.3D.pf", "DTLZ5.3D.pf","DTLZ6.3D.pf","DTLZ7.3D.pf");
 
         Experiment<DoubleSolution, List<DoubleSolution>> experiment
-                = new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>("NSGAIIStudy")
+                = new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>("DTLZ-NSGAIIStudy")
                 .setAlgorithmList(algorithmList)
                 .setProblemList(problemList)
                 .setExperimentBaseDirectory(experimentBaseDirectory)
