@@ -21,41 +21,41 @@ public class PrinterUtils {
         private static PrintWriter currentPw;
 
         public static void info(String s, boolean flag) {
-            currentPw = (flag)? masterPw:workersPw;
-            currentPw.append(new java.util.Date() + " [INFO] " + s + "\n");
+           // currentPw = (flag)? masterPw:workersPw;
+            //currentPw.append(new java.util.Date() + " [INFO] " + s + "\n");
             System.out.print(new java.util.Date() + " [INFO] " + s + "\n");
         }
 
         public static void error(String s, boolean flag) {
-            currentPw = (flag)? masterPw:workersPw;
-            currentPw.append(new java.util.Date() + " [ERROR] " + s + "\n");
+            //currentPw = (flag)? masterPw:workersPw;
+            //currentPw.append(new java.util.Date() + " [ERROR] " + s + "\n");
             System.out.print(new java.util.Date() + " [ERROR] " + s + "\n");
         }
         
         public static void warn(String s, boolean flag) {
-            currentPw = (flag)? masterPw:workersPw;
-            currentPw.append(new java.util.Date() + " [WARN] " + s + "\n");
+            //currentPw = (flag)? masterPw:workersPw;
+            //currentPw.append(new java.util.Date() + " [WARN] " + s + "\n");
             System.out.print(new java.util.Date() + " [WARN] " + s + "\n");
         }
         
         public static void debug(String s, boolean flag) {
-            currentPw = (flag)? masterPw:workersPw;
-            currentPw.append(new java.util.Date() + " [DEBUG] " + s + "\n");
+            //currentPw = (flag)? masterPw:workersPw;
+            //currentPw.append(new java.util.Date() + " [DEBUG] " + s + "\n");
             System.out.print(new java.util.Date() + " [DEBUG] " + s + "\n");
         }
                
 
         public static void setMasterPw(String name) throws FileNotFoundException {
-            masterPw = new PrintWriter(name);
+            //masterPw = new PrintWriter(name);
         }
         
         public static void setWorkersPw(String name) throws FileNotFoundException {
-            workersPw = new PrintWriter(name);
+            //workersPw = new PrintWriter(name);
         }
 
         public static void closePw() {
-            masterPw.close();
-            workersPw.close();
+            //masterPw.close();
+            //workersPw.close();
         }
     }
 }

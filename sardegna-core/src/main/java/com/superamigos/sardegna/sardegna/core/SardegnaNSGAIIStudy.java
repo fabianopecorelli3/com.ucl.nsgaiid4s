@@ -27,18 +27,20 @@ import org.apache.spark.api.java.JavaSparkContext;
 public class SardegnaNSGAIIStudy {
 
   public static void main(String[] args) throws IOException {
-    if (args.length != 1) {
-      throw new JMetalException("Missing argument: experimentBaseDirectory");
+    if (args.length != 6) {
+      throw new JMetalException("Arguments needed: 6; Arguments passed: "+args.length);
     }
     String experimentBaseDirectory = args[0];
-    SparkConf sparkConf = new SparkConf().setAppName("Sardegna").setMaster("local[2]").set("spark.executor.memory", "1g");
-    JavaSparkContext sparkContext = new JavaSparkContext(sparkConf);
-    
+    int numberOfPartitions = Integer.parseInt(args[1]);
+    int independentRuns = Integer.parseInt(args[2]);
+    int populationSize = Integer.parseInt(args[3]);
+    int numberOfIterations = Integer.parseInt(args[4]);
+    boolean locale = Boolean.parseBoolean(args[5]);
+    String masterURL = args[6];
 //    RejectPolicy policy = new RandomReplacementRejectPolicy();
-    //SardegnaDTLZRunner dtlzRunner =  new SardegnaDTLZRunner(experimentBaseDirectory, sparkContext);
-    SmallRunner smallRunner =  new SmallRunner(experimentBaseDirectory, sparkContext);
+    SardegnaRunner runner =  new SardegnaRunner(experimentBaseDirectory, numberOfPartitions, independentRuns, populationSize, numberOfIterations, locale);
+    //SmallRunner runner =  new SmallRunner(experimentBaseDirectory, sparkContext);
+    runner.run();
     
-    smallRunner.run();
-    //dtlzRunner.run();
   }
 }
