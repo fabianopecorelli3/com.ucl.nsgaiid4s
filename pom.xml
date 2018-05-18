@@ -206,7 +206,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.superamigos.sardegna.sardegna.core.SardegnaNSGAIIStudy</mainClass>
+                            <mainClass>com.superamigos.sardegna.core.SardegnaNSGAIIStudy</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -226,7 +226,15 @@
     </build>
 
     <dependencyManagement>
+        
         <dependencies>
+            <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-bom</artifactId>
+            <version>1.10.10</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
             <dependency>
                 <groupId>com.superamigos.sardegna</groupId>
                 <artifactId>sardegna-exec</artifactId>
@@ -286,6 +294,13 @@
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi</artifactId>
                 <version>3.16-beta1</version>
+            </dependency>
+            
+            
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-s3</artifactId>
+                <version>1.10.5</version>
             </dependency>
 
         </dependencies>

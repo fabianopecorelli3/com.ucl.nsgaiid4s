@@ -5,6 +5,7 @@
  */
 package com.superamigos.sardegna.core;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.superamigos.sardegna.algorithm.impl.Sardegna;
 import com.superamigos.sardegna.operator.impl.crossover.SardegnaSBXCrossover;
 import com.superamigos.sardegna.operator.impl.mutation.SardegnaPolynomialMutation;
@@ -87,6 +88,7 @@ public class SardegnaRunner {
     String hdfsPath;
     
     public SardegnaRunner() {
+        AmazonS3 s3client;
     }
 
     public SardegnaRunner(String path, int numberOfPartitions, int independentRuns, int populationSize, int numberOfIterations, boolean locale, String hdfspath) {
