@@ -5,6 +5,9 @@
  */
 package com.superamigos.sardegna.experiment.component;
 
+import com.superamigos.sardegna.utils.DefaultFileOutputContext;
+import com.superamigos.sardegna.utils.FileManager;
+import com.superamigos.sardegna.utils.SolutionListOutput;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,8 +18,6 @@ import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.util.JMetalLogger;
 import org.uma.jmetal.util.experiment.Experiment;
 import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
-import org.uma.jmetal.util.fileoutput.SolutionListOutput;
-import org.uma.jmetal.util.fileoutput.impl.DefaultFileOutputContext;
 
 /**
  *
@@ -24,8 +25,13 @@ import org.uma.jmetal.util.fileoutput.impl.DefaultFileOutputContext;
  */
 public class SardegnaExperimentAlgorithm<S extends Solution<?>, Result> extends ExperimentAlgorithm<S, Result> {
 
-    public SardegnaExperimentAlgorithm(Algorithm<Result> algorithm, String algorithmTag, String problemTag) {
+    private FileManager fileManager;
+    private String hdfsPath;
+    
+    public SardegnaExperimentAlgorithm(Algorithm<Result> algorithm, String algorithmTag, String problemTag, FileManager fileManager, String hdfsPath) {
         super(algorithm, algorithmTag, problemTag);
+        this.fileManager = fileManager;
+        this.hdfsPath = hdfsPath;
     }
 
     public SardegnaExperimentAlgorithm(Algorithm<Result> algorithm, String problemTag) {
@@ -66,10 +72,10 @@ public class SardegnaExperimentAlgorithm<S extends Solution<?>, Result> extends 
 
         long endTime = System.currentTimeMillis();
 
-        new SolutionListOutput((List<S>) population)
+        new SolutionListOutput((List<S>) population,fileManager, hdfsPath)
                 .setSeparator("\t")
-                .setVarFileOutputContext(new DefaultFileOutputContext(varFile))
-                .setFunFileOutputContext(new DefaultFileOutputContext(funFile))
+                .setVarFileOutputContext(new DefaultFileOutputContext(varFile,fileManager, hdfsPath))
+                .setFunFileOutputContext(new DefaultFileOutputContext(funFile,fileManager, hdfsPath))
                 .print();
 
         long timeInSecond = (endTime - startTime) / 1000;
