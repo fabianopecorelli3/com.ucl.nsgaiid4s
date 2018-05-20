@@ -1,11 +1,11 @@
+package com.superamigos.sardegna.experiment.component;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.superamigos.sardegna.experiment.component;
 
-import com.superamigos.sardegna.utils.FileManager;
 import com.superamigos.sardegna.utils.VarghaDelaneyEffSize;
 import java.io.BufferedReader;
 import org.uma.jmetal.qualityindicator.QualityIndicator;
@@ -19,9 +19,9 @@ import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -55,13 +55,9 @@ import org.apache.poi.ss.util.CellRangeAddress;
 public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements ExperimentComponent {
 
     private final Experiment<S, Result> experiment;
-    private FileManager fileManager;
-    private String hdfsPath;
 
-    public GenerateExcelResultsFile(Experiment<S, Result> experiment, FileManager fileManager, String hdfsPath) {
+    public GenerateExcelResultsFile(Experiment<S, Result> experiment) {
         this.experiment = experiment;
-        this.fileManager = fileManager;
-        this.hdfsPath = hdfsPath;
     }
 
     @Override
@@ -71,11 +67,15 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
         File file = new File(fileName);
         HSSFWorkbook workbook = null;
 
-        if (fileManager.exists(hdfsPath, fileName)) {
-            fileManager.delete(hdfsPath, fileName);
+        if (file.exists()) {
+            try {
+                workbook = (HSSFWorkbook) WorkbookFactory.create(file);
+            } catch (InvalidFormatException e) {
+                e.printStackTrace();
+            }
+        } else {
+            workbook = new HSSFWorkbook();
         }
-        workbook = new HSSFWorkbook();
-
         ArrayList<GenericIndicator<S>> indicators = new ArrayList<>();
         indicators.addAll(experiment.getIndicatorList());
         indicators.add(new GenericIndicator<S>() {
@@ -88,7 +88,7 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
             public Double evaluate(List<S> evlt) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
-
+            
             @Override
             public String getName() {
                 return "TIMES";
@@ -96,7 +96,7 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
         });
         for (GenericIndicator<S> indicator : indicators) {
             String indicatorName = indicator.getName();
-
+            
             int rowNumber = 0;
             HSSFSheet sheet = workbook.createSheet(indicatorName);
             Row row = sheet.createRow(rowNumber++);
@@ -124,8 +124,10 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
             int columnOffset = 2;
             int rowOffset = 0;
             String problemName = experiment.getProblemList().get(0).getTag();
+            int problemId = 0;
             for (ExperimentAlgorithm<?, Result> algorithm : experiment.getAlgorithmList()) {
                 if (!problemName.equals(algorithm.getProblemTag())) {
+                    problemId++;
                     problemName = algorithm.getProblemTag();
                     columnOffset = 2;
                     rowOffset += independentRuns;
@@ -135,16 +137,36 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
                         + algorithm.getAlgorithmTag();
 
                 String problemDirectory = algorithmDirectory + "/" + problemName;
+    //            String referenceFrontDirectory = experiment.getReferenceFrontDirectory();
+/*                String referenceFrontName = referenceFrontDirectory
+                        + "/" + experiment.getReferenceFrontFileNames().get(problemId);
+*/
+  //              JMetalLogger.logger.info("RF: " + referenceFrontName);;
+
                 String qualityIndicatorFile = problemDirectory + "/" + indicator.getName();
-                BufferedReader indicatorFile = new BufferedReader(new InputStreamReader(fileManager.openR(hdfsPath, qualityIndicatorFile)));
+
+    //            Front referenceFront = new ArrayFront(referenceFrontName);
+                BufferedReader indicatorFile = new BufferedReader(new FileReader(qualityIndicatorFile));
+  //              FrontNormalizer frontNormalizer = new FrontNormalizer(referenceFront);
+//                Front normalizedReferenceFront = frontNormalizer.normalize(referenceFront);
+
+     //           indicator.setReferenceParetoFront(normalizedReferenceFront);
                 for (int run = 0; run < experiment.getIndependentRuns(); run++) {
                     double indicatorValue = Double.parseDouble(indicatorFile.readLine());
+                   /*String frontFileName = problemDirectory + "/"
+                            + experiment.getOutputParetoFrontFileName() + run + ".tsv";
+*/
+  //              Front front = new ArrayFront(frontFileName);
+   //                 Front normalizedFront = frontNormalizer.normalize(front);
+     //               List<PointSolution> normalizedPopulation = FrontUtils.convertFrontToSolutionList(normalizedFront);
+   //                 Double indicatorValue = (Double) indicator.evaluate((List<S>) normalizedPopulation);
                     JMetalLogger.logger.info(indicator.getName() + ": " + indicatorValue);
 
                     row = sheet.getRow(rowNumber + rowOffset);
                     Cell cell = row.createCell(columnOffset);
 
-                    cell.setCellValue(Precision.round(indicatorValue, 4));
+               //     String toWrite = String.format(Locale.ENGLISH, "%.4f", indicatorValue);
+                    cell.setCellValue(Precision.round(indicatorValue,4));
                     rowNumber++;
 
                 }
@@ -153,10 +175,7 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
             }
         }
         try {
-            if (fileManager.exists(hdfsPath, fileName)) {
-                fileManager.delete(hdfsPath, fileName);
-            }
-            OutputStream outputStream = fileManager.openW(hdfsPath, fileName, false);
+            FileOutputStream outputStream = new FileOutputStream(fileName);
             workbook.write(outputStream);
             workbook.close();
             outputStream.close();
@@ -242,8 +261,9 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
                 String pVal5Dec = String.format(Locale.ENGLISH, "%.5f", pVal);
                 String effsize2Dec = String.format(Locale.ENGLISH, "%.2f", VarghaDelaneyEffSize.varghaDelaneyEffSize(values[p][0], values[p][t + 1]));
 
+
                 sheet.getRow(offset).createCell((t * 2) + startcell).setCellValue(pVal5Dec);
-                sheet.getRow(offset).createCell((t * 2) + startcell + 1).setCellValue(effsize2Dec);
+                sheet.getRow(offset).createCell((t * 2) + startcell+1).setCellValue(effsize2Dec);
             }
             offset++;
         }
@@ -256,10 +276,14 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
         HSSFWorkbook workbook = null;
 
         if (file.exists()) {
-            fileManager.delete(hdfsPath, fileName);
+            try {
+                workbook = (HSSFWorkbook) WorkbookFactory.create(file);
+            } catch (InvalidFormatException e) {
+                e.printStackTrace();
+            }
+        } else {
+            workbook = new HSSFWorkbook();
         }
-        workbook = new HSSFWorkbook();
-
         HSSFSheet sheet = workbook.createSheet("Stats");
         sheet.createRow(0);
         int offset = 2;
@@ -291,10 +315,7 @@ public class GenerateExcelResultsFile<S extends Solution<?>, Result> implements 
 
     private void closeOutputFile(String fileName, HSSFWorkbook workbook) {
         try {
-            if (fileManager.exists(hdfsPath, fileName)) {
-                fileManager.delete(hdfsPath, fileName);
-            }
-            OutputStream outputStream = fileManager.openW(hdfsPath, fileName, false);
+            FileOutputStream outputStream = new FileOutputStream(fileName);
             workbook.write(outputStream);
             workbook.close();
             outputStream.close();

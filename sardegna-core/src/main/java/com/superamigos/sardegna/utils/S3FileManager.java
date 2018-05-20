@@ -14,20 +14,33 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Progressable;
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 
 /**
  *
  * @author fably
  */
-public class S3FileManager implements FileManager {
+public class S3FileManager extends FileManager {
 
     @Override
-    public InputStream openR(String hdfsPath, String fileName) throws FileNotFoundException {
+    public void write(String path, List<String> toWrite) {
+        SparkConf sparkConf = new SparkConf().setAppName("Sardegna");
+        JavaSparkContext sparkContext = new JavaSparkContext(sparkConf);
+        JavaRDD<String> df = sparkContext.parallelize(toWrite, getNumberOfPartitions());
+        //df.saveAsTextFile("s3a://AKIAJA5KUA3KTLB4JN3A:Vn3EDMEaDqyePYxRFihCN7dkDyTJpgzsNiOdwJoW@moga-spark/saveDF");
+    }
+/*
+    @Override
+    public InputStream openR(String fileName) throws FileNotFoundException {
         Configuration configuration = new Configuration();
         FileSystem hdfs;
         InputStream is = null;
@@ -46,7 +59,7 @@ public class S3FileManager implements FileManager {
     }
 
     @Override
-    public OutputStream openW(String hdfsPath, String fileName, boolean append) throws FileNotFoundException {
+    public OutputStream openW(String fileName, boolean append) throws FileNotFoundException {
         Configuration configuration = new Configuration();
         FileSystem hdfs;
         OutputStream os = null;
@@ -67,7 +80,7 @@ public class S3FileManager implements FileManager {
     }
 
     @Override
-    public void close(String hdfsPath, OutputStream os) throws IOException {
+    public void close(OutputStream os) throws IOException {
         Configuration configuration = new Configuration();
         try {
             FileSystem hdfs = FileSystem.get(new URI(hdfsPath), configuration);
@@ -79,7 +92,7 @@ public class S3FileManager implements FileManager {
     }
 
     @Override
-    public boolean exists(String hdfsPath, String fileName) {
+    public boolean exists(String fileName) {
         Configuration configuration = new Configuration();
         FileSystem hdfs;
         OutputStream os = null;
@@ -96,7 +109,7 @@ public class S3FileManager implements FileManager {
     }
 
     @Override
-    public boolean isDirectory(String hdfsPath, String fileName) {
+    public boolean isDirectory(String fileName) {
         /*Configuration configuration = new Configuration();
         FileSystem hdfs;
         OutputStream os = null;
@@ -108,12 +121,12 @@ public class S3FileManager implements FileManager {
             Logger.getLogger(S3FileManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(S3FileManager.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
         return true;
     }
 
     @Override
-    public boolean delete(String hdfsPath, String fileName) {
+    public boolean delete(String fileName) {
         Configuration configuration = new Configuration();
         FileSystem hdfs;
         OutputStream os = null;
@@ -130,7 +143,7 @@ public class S3FileManager implements FileManager {
     }
 
     @Override
-    public boolean mkdirs(String hdfsPath, String fileName) {
+    public boolean mkdirs(String fileName) {
         /*Configuration configuration = new Configuration();
         FileSystem hdfs;
         OutputStream os = null;
@@ -142,8 +155,8 @@ public class S3FileManager implements FileManager {
             Logger.getLogger(S3FileManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(S3FileManager.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
         return true;
     }
-
+*/
 }

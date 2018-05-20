@@ -1,6 +1,6 @@
 package com.superamigos.sardegna.experiment.component;
 
-import com.superamigos.sardegna.utils.FileManager;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.uma.jmetal.util.JMetalLogger;
@@ -8,9 +8,11 @@ import org.uma.jmetal.util.experiment.Experiment;
 import org.uma.jmetal.util.experiment.ExperimentComponent;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,13 +48,10 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
     private double[][][] max;
     private double[][][] min;
     private double[][][] numberOfValues;
-    private FileManager fileManager;
-    private String hdfsPath;
 
-    public GenerateLatexTablesWithStatistics(Experiment<?, ?> configuration, FileManager fileManager, String hdfsPath) {
+    public GenerateLatexTablesWithStatistics(Experiment<?, ?> configuration) {
         this.experiment = configuration;
-        this.fileManager = fileManager;
-        this.hdfsPath = hdfsPath;
+
         experiment.removeDuplicatedAlgorithms();
     }
 
@@ -81,7 +80,8 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
                     directory += "/" + experiment.getProblemList().get(problem).getTag();
                     directory += "/" + experiment.getIndicatorList().get(indicator).getName();
                     // Read values from data files
-                    InputStreamReader isr = new InputStreamReader(fileManager.openR(hdfsPath, directory));
+                    FileInputStream fis = new FileInputStream(directory);
+                    InputStreamReader isr = new InputStreamReader(fis);
                     BufferedReader br = new BufferedReader(isr);
                     String aux = br.readLine();
                     while (aux != null) {
@@ -146,8 +146,10 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
 
     private void generateLatexScript(List<List<List<List<Double>>>> data) throws IOException {
         String latexDirectoryName = experiment.getExperimentBaseDirectory() + "/" + DEFAULT_LATEX_DIRECTORY;
-        if (!fileManager.exists(hdfsPath, latexDirectoryName)) {
-            fileManager.mkdirs(hdfsPath, latexDirectoryName);
+        File latexOutput;
+        latexOutput = new File(latexDirectoryName);
+        if (!latexOutput.exists()) {
+            new File(latexDirectoryName).mkdirs();
             JMetalLogger.logger.info("Creating " + latexDirectoryName + " directory");
         }
         //System.out.println("Experiment name: " + experimentName_);
@@ -186,66 +188,66 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
     }
 
     void printHeaderLatexCommands(String fileName) throws IOException {
-        OutputStream os = fileManager.openW(hdfsPath, fileName, false);
-        os.write(("\\documentclass{article}" + "\n").getBytes("UTF-8"));
-        os.write(("\\title{Result tables}" + "\n").getBytes("UTF-8"));
-        os.write(("\\usepackage{colortbl}" + "\n").getBytes("UTF-8"));
-        os.write(("\\usepackage[a4paper,left=1cm,right=0cm]{geometry}" + "\n").getBytes("UTF-8"));
-        os.write(("\\usepackage[table*]{xcolor}" + "\n").getBytes("UTF-8"));
-        os.write(("\\xdefinecolor{gray95}{gray}{0.65}" + "\n").getBytes("UTF-8"));
-        os.write(("\\xdefinecolor{gray25}{gray}{0.8}" + "\n").getBytes("UTF-8"));
-        os.write(("\\author{Fabiano Pecorelli, Carlo Di Domenico}" + "\n").getBytes("UTF-8"));
-        os.write(("\\begin{document}" + "\n").getBytes("UTF-8"));
-        os.write(("\\maketitle" + "\n").getBytes("UTF-8"));
-        os.write(("\\section{Tables}" + "\n").getBytes("UTF-8"));
+        FileWriter os = new FileWriter(fileName, false);
+        os.write("\\documentclass{article}" + "\n");
+        os.write("\\title{Result tables}" + "\n");
+        os.write("\\usepackage{colortbl}" + "\n");
+        os.write("\\usepackage[a4paper,left=1cm,right=0cm]{geometry}" + "\n");
+        os.write("\\usepackage[table*]{xcolor}" + "\n");
+        os.write("\\xdefinecolor{gray95}{gray}{0.65}" + "\n");
+        os.write("\\xdefinecolor{gray25}{gray}{0.8}" + "\n");
+        os.write("\\author{Fabiano Pecorelli, Carlo Di Domenico}" + "\n");
+        os.write("\\begin{document}" + "\n");
+        os.write("\\maketitle" + "\n");
+        os.write("\\section{Tables}" + "\n");
 
-        fileManager.close(hdfsPath, os);
+        os.close();
     }
 
     void printEndLatexCommands(String fileName) throws IOException {
-        OutputStream os = fileManager.openW(hdfsPath, fileName, true);
-        os.write(("\\end{document}" + "\n").getBytes("UTF-8"));
-        fileManager.close(hdfsPath, os);
+        FileWriter os = new FileWriter(fileName, true);
+        os.write("\\end{document}" + "\n");
+        os.close();
     }
 
     private void printData(String latexFile, int indicatorIndex, double[][][] centralTendency, double[][][] dispersion, String caption1, String caption2) throws IOException {
         // Generate header of the table
-        OutputStream os = fileManager.openW(hdfsPath, latexFile, true);
-        os.write(("\n").getBytes("UTF-8"));
-        os.write(("\\begin{table}" + "\n").getBytes("UTF-8"));
-        os.write(("\\caption{" + experiment.getIndicatorList().get(indicatorIndex).getName() + ". " + caption1 + " and " + caption2 + "}" + "\n").getBytes("UTF-8"));
-        os.write(("\\label{table: " + experiment.getIndicatorList().get(indicatorIndex).getName() + "}" + "\n").getBytes("UTF-8"));
-        os.write(("\\centering" + "\n").getBytes("UTF-8"));
-        os.write(("\\begin{scriptsize}" + "\n").getBytes("UTF-8"));
-        os.write(("\\begin{tabular}{|l|").getBytes("UTF-8"));
+        FileWriter os = new FileWriter(latexFile, true);
+        os.write("\n");
+        os.write("\\begin{table}" + "\n");
+        os.write("\\caption{" + experiment.getIndicatorList().get(indicatorIndex).getName() + ". " + caption1 + " and " + caption2 + "}" + "\n");
+        os.write("\\label{table: " + experiment.getIndicatorList().get(indicatorIndex).getName() + "}" + "\n");
+        os.write("\\centering" + "\n");
+        os.write("\\begin{scriptsize}" + "\n");
+        os.write("\\begin{tabular}{|l|");
 
         // calculate the number of columns
-        os.write((StringUtils.repeat("l|l|", experiment.getAlgorithmList().size())).getBytes("UTF-8"));
-        os.write(("}\n").getBytes("UTF-8"));
-        os.write(("\\hline").getBytes("UTF-8"));
+        os.write(StringUtils.repeat("l|l|", experiment.getAlgorithmList().size()));
+        os.write("}\n");
+        os.write("\\hline");
 
         // write table head
         for (int i = -1; i < experiment.getAlgorithmList().size(); i++) {
             if (i == -1) {
-                os.write((" & ").getBytes("UTF-8"));
+                os.write(" & ");
             } else if (i == (experiment.getAlgorithmList().size() - 1)) {
-                os.write((" \\multicolumn{2}{|l|}{" + experiment.getAlgorithmList().get(i).getAlgorithmTag() + "}\\\\" + "\n").getBytes("UTF-8"));
+                os.write(" \\multicolumn{2}{|l|}{" + experiment.getAlgorithmList().get(i).getAlgorithmTag() + "}\\\\" + "\n");
             } else {
-                os.write(("\\multicolumn{2}{|l|}{" + experiment.getAlgorithmList().get(i).getAlgorithmTag() + "} & ").getBytes("UTF-8"));
+                os.write("\\multicolumn{2}{|l|}{" + experiment.getAlgorithmList().get(i).getAlgorithmTag() + "} & ");
             }
         }
-        os.write(("\\hline \n").getBytes("UTF-8"));
+        os.write("\\hline \n");
 
         for (int i = -1; i < experiment.getAlgorithmList().size(); i++) {
             if (i == -1) {
-                os.write((" & ").getBytes("UTF-8"));
+                os.write(" & ");
             } else if (i == (experiment.getAlgorithmList().size() - 1)) {
-                os.write((" " + caption1 + " & " + caption2 + "\\\\" + "\n").getBytes("UTF-8"));
+                os.write(" " + caption1 + " & " + caption2 + "\\\\" + "\n");
             } else {
-                os.write(("" + caption1 + " & " + caption2 + " & ").getBytes("UTF-8"));
+                os.write("" + caption1 + " & " + caption2 + " & ");
             }
         }
-        os.write(("\\hline \n").getBytes("UTF-8"));
+        os.write("\\hline \n");
 
         // write lines
         for (int i = 0; i < experiment.getProblemList().size(); i++) {
@@ -305,17 +307,17 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
                 }
             }
 
-            os.write((experiment.getProblemList().get(i).getTag().replace("_", "\\_") + " & ").getBytes("UTF-8"));
+            os.write(experiment.getProblemList().get(i).getTag().replace("_", "\\_") + " & ");
             for (int j = 0; j < (experiment.getAlgorithmList().size() - 1); j++) {
 
                 String m = String.format(Locale.ENGLISH, "%.4f", centralTendency[indicatorIndex][i][j]);
                 String s = String.format(Locale.ENGLISH, "%.4f", dispersion[indicatorIndex][i][j]);
                 if (j == bestIndex) {
-                    os.write(("\\cellcolor{gray95}$" + m + "$ & \\cellcolor{gray95}$" + s + "$ & ").getBytes("UTF-8"));
+                    os.write("\\cellcolor{gray95}$" + m + "$ & \\cellcolor{gray95}$" + s + "$ & ");
                 } else if (j == bestIndex) {
-                    os.write(("\\cellcolor{gray25}$" + m + "$ & \\cellcolor{gray25}$" + s + "$ & ").getBytes("UTF-8"));
+                    os.write("\\cellcolor{gray25}$" + m + "$ & \\cellcolor{gray25}$" + s + "$ & ");
                 } else {
-                    os.write(("$" + m + "$ & $" + s + "$ & ").getBytes("UTF-8"));
+                    os.write("$" + m + "$ & $" + s + "$ & ");
                 }
             }
 
@@ -324,20 +326,20 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
             String s = String.format(Locale.ENGLISH, "%.4f",
                     dispersion[indicatorIndex][i][experiment.getAlgorithmList().size() - 1]);
             if (bestIndex == (experiment.getAlgorithmList().size() - 1)) {
-                os.write(("\\cellcolor{gray95}$" + m + "$ & \\cellcolor{gray95}$" + s + "$ \\\\" + "\n").getBytes("UTF-8"));
+                os.write("\\cellcolor{gray95}$" + m + "$ & \\cellcolor{gray95}$" + s + "$ \\\\" + "\n");
             } else if (secondBestIndex == (experiment.getAlgorithmList().size() - 1)) {
-                os.write(("\\cellcolor{gray25}$" + m + "$ & \\cellcolor{gray25}$" + s + "$ \\\\" + "\n").getBytes("UTF-8"));
+                os.write("\\cellcolor{gray25}$" + m + "$ & \\cellcolor{gray25}$" + s + "$ \\\\" + "\n");
             } else {
-                os.write(("$" + m + "$ & $" + s + "$ \\\\" + "\n").getBytes("UTF-8"));
+                os.write("$" + m + "$ & $" + s + "$ \\\\" + "\n");
             }
         }
 
         // close table
-        os.write(("\\hline" + "\n").getBytes("UTF-8"));
-        os.write(("\\end{tabular}" + "\n").getBytes("UTF-8"));
-        os.write(("\\end{scriptsize}" + "\n").getBytes("UTF-8"));
-        os.write(("\\end{table}" + "\n").getBytes("UTF-8"));
-        fileManager.close(hdfsPath, os);
+        os.write("\\hline" + "\n");
+        os.write("\\end{tabular}" + "\n");
+        os.write("\\end{scriptsize}" + "\n");
+        os.write("\\end{table}" + "\n");
+        os.close();
     }
 
 }

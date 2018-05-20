@@ -21,10 +21,9 @@ import com.superamigos.sardegna.experiment.component.GenerateLatexTablesWithStat
 import com.superamigos.sardegna.experiment.component.GeneratePDFBoxplotsWithR;
 import com.superamigos.sardegna.utils.HadoopFileManager;
 import com.superamigos.sardegna.utils.LocalFileManger;
-import com.superamigos.sardegna.experiment.component.ComputeQualityIndicators;
 import com.superamigos.sardegna.experiment.component.ExecuteAlgorithms;
-import com.superamigos.sardegna.experiment.component.GenerateWilcoxonTestTablesWithR;
 import com.superamigos.sardegna.experiment.component.SardegnaExperimentAlgorithm;
+import com.superamigos.sardegna.utils.S3FileManager;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -69,6 +68,8 @@ import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.experiment.Experiment;
 import org.uma.jmetal.util.experiment.ExperimentBuilder;
+import org.uma.jmetal.util.experiment.component.ComputeQualityIndicators;
+import org.uma.jmetal.util.experiment.component.GenerateWilcoxonTestTablesWithR;
 import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 
@@ -85,13 +86,12 @@ public class SardegnaRunner {
     int populationSize;
     int numberOfIterations;
     FileManager fileManager;
-    String hdfsPath;
     
     public SardegnaRunner() {
         AmazonS3 s3client;
     }
 
-    public SardegnaRunner(String path, int numberOfPartitions, int independentRuns, int populationSize, int numberOfIterations, boolean locale, String hdfspath) {
+    public SardegnaRunner(String path, int numberOfPartitions, int independentRuns, int populationSize, int numberOfIterations, boolean locale) {
         this.path = path;
         this.numberOfPartitions = numberOfPartitions;
         this.independentRuns = independentRuns;
@@ -103,10 +103,9 @@ public class SardegnaRunner {
             fileManager = new LocalFileManger();
         }
         else{
-            fileManager = new HadoopFileManager();
+            fileManager = new S3FileManager();
         }
         this.sparkContext = new JavaSparkContext(sparkConf);
-        this.hdfsPath = hdfspath;
     }
 
     public void run() throws FileNotFoundException, IOException {
@@ -165,13 +164,14 @@ public class SardegnaRunner {
                 .setNumberOfCores(8)
                 .build();
 
-        new ExecuteAlgorithms<>(experiment, fileManager, hdfsPath).run();
-        new ComputeQualityIndicators<>(experiment, fileManager, hdfsPath).run();
-        new GenerateExcelResultsFile(experiment, fileManager, hdfsPath).run();
-        new GenerateLatexTablesWithStatistics(experiment, fileManager, hdfsPath).run();
-        new GenerateWilcoxonTestTablesWithR<>(experiment, fileManager, hdfsPath).run();
+     // new ExecuteAlgorithms<>(experiment, fileManager).run();
+        new ComputeQualityIndicators<>(experiment).run();
+        new GenerateExcelResultsFile(experiment).run();
+        new GenerateLatexTablesWithStatistics(experiment).run();
+        
+        new GenerateWilcoxonTestTablesWithR<>(experiment).run();
 //        new GenerateFriedmanTestTables<>(experiment).run();
-        new GeneratePDFBoxplotsWithR<>(experiment, fileManager, hdfsPath).setRows(1).setColumns(1).run();
+        new GeneratePDFBoxplotsWithR<>(experiment).setRows(1).setColumns(1).run();
         PrinterUtils.Printer.closePw();
     }
 
@@ -196,7 +196,7 @@ public class SardegnaRunner {
                     .setMaxEvaluations(populationSize * numberOfIterations)
                     .setPopulationSize(populationSize)
                     .build();
-            algorithms.add(new SardegnaExperimentAlgorithm<>(algorithm, "jMetal", problemList.get(i).getTag(),fileManager,hdfsPath));
+            algorithms.add(new SardegnaExperimentAlgorithm<>(algorithm, "jMetal", problemList.get(i).getTag(),fileManager));
             Algorithm<List<DoubleSolution>> sardegna_RR = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
                     populationSize * numberOfIterations,
@@ -207,7 +207,7 @@ public class SardegnaRunner {
                     new SardegnaSBXCrossover(1.0, 5),
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
-            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_RR, "RR", problemList.get(i).getTag(),fileManager,hdfsPath));
+            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_RR, "RR", problemList.get(i).getTag(),fileManager));
             Algorithm<List<DoubleSolution>> sardegna_REPL = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
                     populationSize * numberOfIterations,
@@ -218,7 +218,7 @@ public class SardegnaRunner {
                     new SardegnaSBXCrossover(1.0, 5),
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
-            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_REPL, "REPL", problemList.get(i).getTag(),fileManager,hdfsPath));
+            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_REPL, "REPL", problemList.get(i).getTag(),fileManager));
             Algorithm<List<DoubleSolution>> sardegna_DR = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
                     populationSize * numberOfIterations,
@@ -229,7 +229,7 @@ public class SardegnaRunner {
                     new SardegnaSBXCrossover(1.0, 5),
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
-            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_DR, "DR", problemList.get(i).getTag(),fileManager,hdfsPath));
+            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_DR, "DR", problemList.get(i).getTag(),fileManager));
             Algorithm<List<DoubleSolution>> sardegna_REPR = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
                     populationSize * numberOfIterations,
@@ -240,7 +240,7 @@ public class SardegnaRunner {
                     new SardegnaSBXCrossover(1.0, 5),
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
-            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_REPR, "REPR", problemList.get(i).getTag(),fileManager,hdfsPath));
+            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_REPR, "REPR", problemList.get(i).getTag(),fileManager));
             Algorithm<List<DoubleSolution>> sardegna_RM = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
                     populationSize * numberOfIterations,
@@ -251,7 +251,7 @@ public class SardegnaRunner {
                     new SardegnaSBXCrossover(1.0, 5),
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
-            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_RM, "REM", problemList.get(i).getTag(),fileManager,hdfsPath));
+            algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_RM, "REM", problemList.get(i).getTag(),fileManager));
         }
         return algorithms;
     }

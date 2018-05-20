@@ -10,8 +10,11 @@ import com.superamigos.sardegna.utils.PrinterUtils;
 import com.superamigos.sardegna.rejectpolicy.RejectPolicy;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.SQLContext;
 import org.uma.jmetal.algorithm.impl.AbstractGeneticAlgorithm;
 import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
@@ -103,7 +106,7 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
             JavaRDD<List<S>> pareti = algorithmsToParallelize.map(algorithm -> {
                 return algorithm.getResult();
             });
-
+            
             pareto = pareti.reduce((a, b) -> {
                 return computeSuperPareto(a, b);
             });

@@ -36,12 +36,8 @@ public class SardegnaNSGAIIStudy {
     int populationSize = Integer.parseInt(args[3]);
     int numberOfIterations = Integer.parseInt(args[4]);
     boolean locale = Boolean.parseBoolean(args[5]);
-    String hdfsPath = "files://";
-    if (!locale){
-        //hdfsPath = args[6];
-    }
 //    RejectPolicy policy = new RandomReplacementRejectPolicy();
-    SardegnaRunner runner =  new SardegnaRunner(experimentBaseDirectory, numberOfPartitions, independentRuns, populationSize, numberOfIterations, locale, hdfsPath);
+    SardegnaRunner runner =  new SardegnaRunner(experimentBaseDirectory, numberOfPartitions, independentRuns, populationSize, numberOfIterations, locale);
     //SmallRunner runner =  new SmallRunner(experimentBaseDirectory, sparkContext);
     runner.run();
     

@@ -24,10 +24,10 @@ import org.apache.hadoop.util.Progressable;
  *
  * @author fably
  */
-public class HadoopFileManager implements FileManager {
-
+public class HadoopFileManager /*implements FileManager*/ {
+/*
     @Override
-    public InputStream openR(String hdfsPath, String fileName) throws FileNotFoundException {
+    public InputStream openR(String fileName) throws FileNotFoundException {
         Configuration configuration = new Configuration();
         FileSystem hdfs;
         InputStream is = null;
@@ -46,7 +46,7 @@ public class HadoopFileManager implements FileManager {
     }
 
     @Override
-    public OutputStream openW(String hdfsPath, String fileName, boolean append) throws FileNotFoundException {
+    public OutputStream openW(String fileName, boolean append) throws FileNotFoundException {
         Configuration configuration = new Configuration();
         FileSystem hdfs;
         OutputStream os = null;
@@ -67,7 +67,7 @@ public class HadoopFileManager implements FileManager {
     }
 
     @Override
-    public void close(String hdfsPath, OutputStream os) throws IOException {
+    public void close(OutputStream os) throws IOException {
         Configuration configuration = new Configuration();
         try {
             FileSystem hdfs = FileSystem.get(new URI(hdfsPath), configuration);
@@ -79,7 +79,7 @@ public class HadoopFileManager implements FileManager {
     }
 
     @Override
-    public boolean exists(String hdfsPath, String fileName) {
+    public boolean exists(String fileName) {
         Configuration configuration = new Configuration();
         FileSystem hdfs;
         OutputStream os = null;
@@ -96,7 +96,7 @@ public class HadoopFileManager implements FileManager {
     }
 
     @Override
-    public boolean isDirectory(String hdfsPath, String fileName) {
+    public boolean isDirectory(String fileName) {
         Configuration configuration = new Configuration();
         FileSystem hdfs;
         OutputStream os = null;
@@ -113,7 +113,7 @@ public class HadoopFileManager implements FileManager {
     }
 
     @Override
-    public boolean delete(String hdfsPath, String fileName) {
+    public boolean delete(String fileName) {
         Configuration configuration = new Configuration();
         FileSystem hdfs;
         OutputStream os = null;
@@ -130,7 +130,7 @@ public class HadoopFileManager implements FileManager {
     }
 
     @Override
-    public boolean mkdirs(String hdfsPath, String fileName) {
+    public boolean mkdirs(String fileName) {
         Configuration configuration = new Configuration();
         FileSystem hdfs;
         OutputStream os = null;
@@ -145,5 +145,5 @@ public class HadoopFileManager implements FileManager {
         }
         return false;
     }
-
+*/
 }
