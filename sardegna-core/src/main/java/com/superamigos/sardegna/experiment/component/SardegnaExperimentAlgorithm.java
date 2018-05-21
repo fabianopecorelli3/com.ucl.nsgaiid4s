@@ -5,7 +5,6 @@
  */
 package com.superamigos.sardegna.experiment.component;
 
-import com.superamigos.sardegna.utils.DefaultFileOutputContext_REMOVE;
 import com.superamigos.sardegna.utils.FileManager;
 import com.superamigos.sardegna.utils.SolutionListOutput;
 import java.io.File;
@@ -53,7 +52,7 @@ public class SardegnaExperimentAlgorithm<S extends Solution<?>, Result> extends 
                 + getAlgorithmTag()
                 + "/"
                 + getProblemTag();
-
+/*
         File outputDirectory = new File(outputDirectoryName);
         if (!outputDirectory.exists()) {
             boolean result = new File(outputDirectoryName).mkdirs();
@@ -63,7 +62,7 @@ public class SardegnaExperimentAlgorithm<S extends Solution<?>, Result> extends 
                 JMetalLogger.logger.severe("Creating " + outputDirectoryName + " failed");
             }
         }
-
+*/
         String funFile = outputDirectoryName + "/FUN" + id + ".tsv";
         String varFile = outputDirectoryName + "/VAR" + id + ".tsv";
 

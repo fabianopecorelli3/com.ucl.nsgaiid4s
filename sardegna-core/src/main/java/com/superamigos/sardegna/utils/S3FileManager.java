@@ -22,6 +22,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Progressable;
 import org.apache.spark.SparkConf;
+import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
@@ -31,12 +32,13 @@ import org.apache.spark.api.java.JavaSparkContext;
  */
 public class S3FileManager extends FileManager {
 
+    
     @Override
     public void write(String path, List<String> toWrite) {
         SparkConf sparkConf = new SparkConf().setAppName("Sardegna");
-        JavaSparkContext sparkContext = new JavaSparkContext(sparkConf);
-        JavaRDD<String> df = sparkContext.parallelize(toWrite, getNumberOfPartitions());
-        //df.saveAsTextFile("s3a://AKIAJA5KUA3KTLB4JN3A:Vn3EDMEaDqyePYxRFihCN7dkDyTJpgzsNiOdwJoW@moga-spark/saveDF");
+        JavaSparkContext sparkContext = new JavaSparkContext(SparkContext.getOrCreate(sparkConf));
+        JavaRDD<String> rdd = sparkContext.parallelize(toWrite, getNumberOfPartitions());
+        rdd.coalesce(1).saveAsTextFile("s3a://AKIAJA5KUA3KTLB4JN3A:Vn3EDMEaDqyePYxRFihCN7dkDyTJpgzsNiOdwJoW@moga-spark/"+path);
     }
 /*
     @Override

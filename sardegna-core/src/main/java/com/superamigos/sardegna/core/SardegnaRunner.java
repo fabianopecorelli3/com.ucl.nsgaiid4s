@@ -104,6 +104,7 @@ public class SardegnaRunner {
         }
         else{
             fileManager = new S3FileManager();
+            fileManager.setNumberOfPartitions(numberOfPartitions);
         }
         this.sparkContext = new JavaSparkContext(sparkConf);
     }
@@ -164,15 +165,15 @@ public class SardegnaRunner {
                 .setNumberOfCores(8)
                 .build();
 
-     // new ExecuteAlgorithms<>(experiment, fileManager).run();
-        new ComputeQualityIndicators<>(experiment).run();
+        new ExecuteAlgorithms<>(experiment, fileManager).run();
+      /*  new ComputeQualityIndicators<>(experiment).run();
         new GenerateExcelResultsFile(experiment).run();
         new GenerateLatexTablesWithStatistics(experiment).run();
         
         new GenerateWilcoxonTestTablesWithR<>(experiment).run();
 //        new GenerateFriedmanTestTables<>(experiment).run();
         new GeneratePDFBoxplotsWithR<>(experiment).setRows(1).setColumns(1).run();
-        PrinterUtils.Printer.closePw();
+      */  PrinterUtils.Printer.closePw();
     }
 
     /**

@@ -37,17 +37,21 @@ public class ExecuteAlgorithms<S extends Solution<?>, Result> implements Experim
     @Override
     public void run() {
         JMetalLogger.logger.info("ExecuteAlgorithms: Preparing output directory");
-        prepareOutputDirectory();
+        //prepareOutputDirectory();
 
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism",
                 "" + this.experiment.getNumberOfCores());
 
         for (int i = 0; i < experiment.getIndependentRuns(); i++) {
             final int id = i;
-
-            experiment.getAlgorithmList()
+            
+            for (ExperimentAlgorithm ea : experiment.getAlgorithmList()) {
+                ea.runAlgorithm(id, experiment);
+            }
+            
+            /*experiment.getAlgorithmList()
                     .parallelStream()
-                    .forEach(algorithm -> algorithm.runAlgorithm(id, experiment));
+                    .forEach(algorithm -> algorithm.runAlgorithm(id, experiment));*/
         }
 
         for (ExperimentAlgorithm ea : experiment.getAlgorithmList()) {
