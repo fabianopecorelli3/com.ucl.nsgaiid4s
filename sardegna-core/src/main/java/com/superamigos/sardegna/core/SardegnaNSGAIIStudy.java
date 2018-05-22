@@ -27,17 +27,18 @@ import org.apache.spark.api.java.JavaSparkContext;
 public class SardegnaNSGAIIStudy {
 
   public static void main(String[] args) throws IOException {
-    if (args.length < 6 || args.length > 7) {
+    if (args.length != 7) {
       throw new JMetalException("Arguments: experimentBaseDir, numberOfPartitions, independentRuns, populationSize, numberOfIteration, locale, hdfsPath[optional]");
     }
     String experimentBaseDirectory = args[0];
     int numberOfPartitions = Integer.parseInt(args[1]);
-    int independentRuns = Integer.parseInt(args[2]);
-    int populationSize = Integer.parseInt(args[3]);
-    int numberOfIterations = Integer.parseInt(args[4]);
-    boolean locale = Boolean.parseBoolean(args[5]);
+    int k = Integer.parseInt(args[2]);
+    int independentRuns = Integer.parseInt(args[3]);
+    int populationSize = Integer.parseInt(args[4]);
+    int numberOfIterations = Integer.parseInt(args[5]);
+    boolean locale = Boolean.parseBoolean(args[6]);
 //    RejectPolicy policy = new RandomReplacementRejectPolicy();
-    SardegnaRunner runner =  new SardegnaRunner(experimentBaseDirectory, numberOfPartitions, independentRuns, populationSize, numberOfIterations, locale);
+    SardegnaRunner runner =  new SardegnaRunner(experimentBaseDirectory, numberOfPartitions, k, independentRuns, populationSize, numberOfIterations, locale);
     //SmallRunner runner =  new SmallRunner(experimentBaseDirectory, sparkContext);
     runner.run();
     

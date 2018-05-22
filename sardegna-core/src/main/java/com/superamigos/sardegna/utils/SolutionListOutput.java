@@ -7,7 +7,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.uma.jmetal.util.fileoutput.FileOutputContext;
 
 /**
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
@@ -36,7 +35,6 @@ public class SolutionListOutput {
     
     public SolutionListOutput setObjectiveMinimizingObjectiveList(List<Boolean> isObjectiveToBeMinimized) {
         this.isObjectiveToBeMinimized = isObjectiveToBeMinimized;
-
         return this;
     }
 

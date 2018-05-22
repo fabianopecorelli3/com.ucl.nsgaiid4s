@@ -86,12 +86,13 @@ public class SardegnaRunner {
     int populationSize;
     int numberOfIterations;
     FileManager fileManager;
+    int k;
     
     public SardegnaRunner() {
         AmazonS3 s3client;
     }
 
-    public SardegnaRunner(String path, int numberOfPartitions, int independentRuns, int populationSize, int numberOfIterations, boolean locale) {
+    public SardegnaRunner(String path, int numberOfPartitions, int k, int independentRuns, int populationSize, int numberOfIterations, boolean locale) {
         this.path = path;
         this.numberOfPartitions = numberOfPartitions;
         this.independentRuns = independentRuns;
@@ -99,7 +100,7 @@ public class SardegnaRunner {
         this.numberOfIterations = numberOfIterations;
         SparkConf sparkConf = new SparkConf().setAppName("Sardegna");
         if (locale) {
-            sparkConf.setMaster("local[2]").set("spark.executor.memory", "1g");
+            sparkConf.setMaster("local[2]")/*.set("spark.executor.memory", "1g")*/;
             fileManager = new LocalFileManger();
         }
         else{
@@ -116,7 +117,7 @@ public class SardegnaRunner {
         PrinterUtils.Printer.setWorkersPw(experimentBaseDirectory + "/workers-log.txt");
 
         List<ExperimentProblem<DoubleSolution>> problemList = new ArrayList<>();
-        problemList.add(new ExperimentProblem<>(new ZDT1()));
+      /*  problemList.add(new ExperimentProblem<>(new ZDT1()));
         problemList.add(new ExperimentProblem<>(new ZDT2()));
         problemList.add(new ExperimentProblem<>(new ZDT3()));
         problemList.add(new ExperimentProblem<>(new ZDT4()));
@@ -138,12 +139,12 @@ public class SardegnaRunner {
         problemList.add(new ExperimentProblem<>(new DTLZ3()));
         problemList.add(new ExperimentProblem<>(new DTLZ4()));
         problemList.add(new ExperimentProblem<>(new DTLZ5()));
-        problemList.add(new ExperimentProblem<>(new DTLZ6()));
-        problemList.add(new ExperimentProblem<>(new DTLZ7()));
+        */problemList.add(new ExperimentProblem<>(new DTLZ6()));
+        //problemList.add(new ExperimentProblem<>(new DTLZ7()));
 
         List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithmList
                 = configureAlgorithmList(problemList);
-        List<String> referenceFrontFileNames = Arrays.asList("ZDT1.pf", "ZDT2.pf", "ZDT3.pf", "ZDT4.pf", "ZDT6.pf", "WFG1.2D.pf", "WFG2.2D.pf", "WFG3.2D.pf", "WFG4.2D.pf", "WFG5.2D.pf", "WFG6.2D.pf", "WFG7.2D.pf", "WFG8.2D.pf", "WFG9.2D.pf", "Binh2.pf", "Golinski.pf", "Kursawe.pf", "DTLZ1.3D.pf", "DTLZ2.3D.pf", "DTLZ3.3D.pf", "DTLZ4.3D.pf", "DTLZ5.3D.pf", "DTLZ6.3D.pf", "DTLZ7.3D.pf");
+        List<String> referenceFrontFileNames = Arrays.asList(/*"ZDT1.pf", "ZDT2.pf", "ZDT3.pf", "ZDT4.pf", "ZDT6.pf", "WFG1.2D.pf", "WFG2.2D.pf", "WFG3.2D.pf", "WFG4.2D.pf", "WFG5.2D.pf", "WFG6.2D.pf", "WFG7.2D.pf", "WFG8.2D.pf", "WFG9.2D.pf", "Binh2.pf", "Golinski.pf", "Kursawe.pf", "DTLZ1.3D.pf", "DTLZ2.3D.pf", "DTLZ3.3D.pf", "DTLZ4.3D.pf", "DTLZ5.3D.pf", */"DTLZ6.3D.pf"/*, "DTLZ7.3D.pf"/*/);
 
         Experiment<DoubleSolution, List<DoubleSolution>> experiment
                 = new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>("NSGAIIStudy")
@@ -190,7 +191,7 @@ public class SardegnaRunner {
         List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithms = new ArrayList<>();
 
         for (int i = 0; i < problemList.size(); i++) {
-            Algorithm<List<DoubleSolution>> algorithm = new NSGAIIBuilder<>(
+            /*Algorithm<List<DoubleSolution>> algorithm = new NSGAIIBuilder<>(
                     problemList.get(i).getProblem(),
                     new SBXCrossover(1.0, 5),
                     new PolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0))
@@ -209,9 +210,10 @@ public class SardegnaRunner {
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
             algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_RR, "RR", problemList.get(i).getTag(),fileManager));
-            Algorithm<List<DoubleSolution>> sardegna_REPL = new Sardegna<DoubleSolution>(
+            */Algorithm<List<DoubleSolution>> sardegna_REPL = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
                     populationSize * numberOfIterations,
+                    k,
                     numberOfPartitions,
                     populationSize,
                     sparkContext,
@@ -220,7 +222,7 @@ public class SardegnaRunner {
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
             algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_REPL, "REPL", problemList.get(i).getTag(),fileManager));
-            Algorithm<List<DoubleSolution>> sardegna_DR = new Sardegna<DoubleSolution>(
+            /*Algorithm<List<DoubleSolution>> sardegna_DR = new Sardegna<DoubleSolution>(
                     problemList.get(i).getProblem(),
                     populationSize * numberOfIterations,
                     numberOfPartitions,
@@ -253,7 +255,7 @@ public class SardegnaRunner {
                     new SardegnaPolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0)
             );
             algorithms.add(new SardegnaExperimentAlgorithm<>(sardegna_RM, "REM", problemList.get(i).getTag(),fileManager));
-        }
+        */}
         return algorithms;
     }
 

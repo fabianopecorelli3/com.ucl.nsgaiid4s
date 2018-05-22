@@ -40,6 +40,7 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
     private List<S> rejectedIndividuals;
     private RejectPolicy<S> rejectPolicy;
     private Ranking<S> ranking;
+    private int k;
 
     /**
      *
@@ -50,11 +51,11 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
      * @param sparkContext
      *
      */
-    public Sardegna(Problem<S> problem, int maxEvaluations, int numberOfPartitions, int populationSize, JavaSparkContext sparkContext, RejectPolicy rejectPolicy, CrossoverOperator crossoverOperator, MutationOperator mutationOperator) {
+    public Sardegna(Problem<S> problem, int maxEvaluations, int k, int numberOfPartitions, int populationSize, JavaSparkContext sparkContext, RejectPolicy rejectPolicy, CrossoverOperator crossoverOperator, MutationOperator mutationOperator) {
         super(problem);
         this.numberOfPartitions = numberOfPartitions;
         this.algorithms = new ArrayList<>();
-
+        this.k = k;
         for (int i = 0; i < numberOfPartitions; i++) {
             algorithms.add(new SardegnaNSGAIIBuilder<S>(
                     problem,
@@ -83,7 +84,7 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
         int i = 0;
         while (!isStoppingConditionReached()) {
             long timeStartIteration = System.currentTimeMillis();
-            PrinterUtils.Printer.info("Start iteration #" + i,true);
+            PrinterUtils.Printer.info("Start iteration #" + i, true);
 
             algorithmsToParallelize = sparkContext.parallelize(algorithms, numberOfPartitions);
 
@@ -103,21 +104,22 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
 
             algorithmsToParallelize = sparkContext.parallelize(algorithms, numberOfPartitions);
 
-            JavaRDD<List<S>> pareti = algorithmsToParallelize.map(algorithm -> {
-                return algorithm.getResult();
-            });
-            
-            pareto = pareti.reduce((a, b) -> {
-                return computeSuperPareto(a, b);
-            });
+            if ((i % k) == 0) {
+                JavaRDD<List<S>> pareti = algorithmsToParallelize.map(algorithm -> {
+                    return algorithm.getResult();
+                });
 
+                pareto = pareti.reduce((a, b) -> {
+                    return computeSuperPareto(a, b);
+                });
+            }
             /*PrinterUtils.Printer.print("PARETO AT ITERATION " + i + ":\n\n");
             for (S s : pareto) {
                 PrinterUtils.Printer.print(s.getObjective(0) + " - ");
                 PrinterUtils.Printer.print(s.getObjective(1) + "\n\n");
             }*/
             updateProgress();
-            PrinterUtils.Printer.info("ENDED Iteration #"+i+" in: " + (System.currentTimeMillis() - timeStartIteration) + " ms", true);
+            PrinterUtils.Printer.info("ENDED Iteration #" + i + " in: " + (System.currentTimeMillis() - timeStartIteration) + " ms", true);
             i++;
 
         }
