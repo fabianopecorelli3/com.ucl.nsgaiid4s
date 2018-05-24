@@ -82,29 +82,29 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
         initProgress();
 
         int i = 0;
+        algorithmsToParallelize = sparkContext.parallelize(algorithms, numberOfPartitions);
         while (!isStoppingConditionReached()) {
             long timeStartIteration = System.currentTimeMillis();
             PrinterUtils.Printer.info("Start iteration #" + i, true);
-
-            algorithmsToParallelize = sparkContext.parallelize(algorithms, numberOfPartitions);
 
             algorithmsToParallelize = algorithmsToParallelize.map(algorithm -> {
                 if (rejectedIndividuals.size() > 0) {
                     algorithm.receiveRejectedIndividuals(rejectedIndividuals, rejectPolicy, pareto);
                 }
-
                 algorithm.executeIteration();
                 return algorithm;
             });
 
-            long timeStartCollect = System.currentTimeMillis();
-            PrinterUtils.Printer.info("START Collect phase", true);
-            algorithms = algorithmsToParallelize.collect();
-            PrinterUtils.Printer.info("ENDED Collect phase in: " + (System.currentTimeMillis() - timeStartCollect) + " ms", true);
 
-            algorithmsToParallelize = sparkContext.parallelize(algorithms, numberOfPartitions);
+            if (((i + 1) % k) == 0) {
+                
+                long timeStartCollect = System.currentTimeMillis();
+                PrinterUtils.Printer.info("START Collect phase", true);
+                algorithms = algorithmsToParallelize.collect();
+                PrinterUtils.Printer.info("ENDED Collect phase in: " + (System.currentTimeMillis() - timeStartCollect) + " ms", true);
 
-            if ((i % k) == 0) {
+                algorithmsToParallelize = sparkContext.parallelize(algorithms, numberOfPartitions);
+               
                 JavaRDD<List<S>> pareti = algorithmsToParallelize.map(algorithm -> {
                     return algorithm.getResult();
                 });
@@ -112,6 +112,8 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
                 pareto = pareti.reduce((a, b) -> {
                     return computeSuperPareto(a, b);
                 });
+                
+                algorithmsToParallelize = sparkContext.parallelize(algorithms, numberOfPartitions);
             }
             /*PrinterUtils.Printer.print("PARETO AT ITERATION " + i + ":\n\n");
             for (S s : pareto) {

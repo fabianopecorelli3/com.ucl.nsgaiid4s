@@ -37,7 +37,7 @@ public class ExecuteAlgorithms<S extends Solution<?>, Result> implements Experim
     @Override
     public void run() {
         JMetalLogger.logger.info("ExecuteAlgorithms: Preparing output directory");
-        //prepareOutputDirectory();
+        prepareOutputDirectory();
 
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism",
                 "" + this.experiment.getNumberOfCores());
