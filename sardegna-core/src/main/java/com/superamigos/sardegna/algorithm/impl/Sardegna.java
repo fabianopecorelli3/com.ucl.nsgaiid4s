@@ -82,7 +82,7 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
         initProgress();
 
         int i = 0;
-        algorithmsToParallelize = sparkContext.parallelize(algorithms, numberOfPartitions);
+        //algorithmsToParallelize = sparkContext.parallelize(algorithms, numberOfPartitions);
         while (!isStoppingConditionReached()) {
             long timeStartIteration = System.currentTimeMillis();
             PrinterUtils.Printer.info("Start iteration #" + i, true);

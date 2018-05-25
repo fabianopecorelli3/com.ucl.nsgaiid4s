@@ -52,7 +52,7 @@ public class SardegnaExperimentAlgorithm<S extends Solution<?>, Result> extends 
                 + getAlgorithmTag()
                 + "/"
                 + getProblemTag();
-
+/*
         File outputDirectory = new File(outputDirectoryName);
         if (!outputDirectory.exists()) {
             boolean result = new File(outputDirectoryName).mkdirs();
@@ -62,7 +62,7 @@ public class SardegnaExperimentAlgorithm<S extends Solution<?>, Result> extends 
                 JMetalLogger.logger.severe("Creating " + outputDirectoryName + " failed");
             }
         }
-
+*/
         String funFile = outputDirectoryName + "/FUN" + id + ".tsv";
         String varFile = outputDirectoryName + "/VAR" + id + ".tsv";
 
