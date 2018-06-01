@@ -41,6 +41,7 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
     private RejectPolicy<S> rejectPolicy;
     private Ranking<S> ranking;
     private int k;
+    private int numberOfThreads;
 
     /**
      *
@@ -51,7 +52,7 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
      * @param sparkContext
      *
      */
-    public Sardegna(Problem<S> problem, int maxEvaluations, int k, int numberOfPartitions, int populationSize, JavaSparkContext sparkContext, RejectPolicy rejectPolicy, CrossoverOperator crossoverOperator, MutationOperator mutationOperator) {
+    public Sardegna(Problem<S> problem, int maxEvaluations, int k, int numberOfPartitions, int populationSize, JavaSparkContext sparkContext, RejectPolicy rejectPolicy, CrossoverOperator crossoverOperator, MutationOperator mutationOperator, int numberOfThreads) {
         super(problem);
         this.numberOfPartitions = numberOfPartitions;
         this.algorithms = new ArrayList<>();
@@ -60,7 +61,8 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
             algorithms.add(new SardegnaNSGAIIBuilder<S>(
                     problem,
                     crossoverOperator,
-                    mutationOperator)
+                    mutationOperator,
+                    numberOfThreads)
                     .setMaxEvaluations(maxEvaluations / numberOfPartitions)
                     .setPopulationSize(populationSize / numberOfPartitions)
                     .build());
@@ -73,6 +75,7 @@ public class Sardegna<S extends Solution<?>> extends AbstractGeneticAlgorithm<S,
         this.rejectedIndividuals = new ArrayList<>();
         this.rejectPolicy = rejectPolicy;
         this.ranking = new DominanceRanking<>();
+        this.numberOfThreads = numberOfThreads;
     }
 
     @Override

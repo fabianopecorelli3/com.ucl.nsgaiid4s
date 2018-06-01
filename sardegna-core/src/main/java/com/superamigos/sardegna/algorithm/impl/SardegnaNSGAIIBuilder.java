@@ -13,6 +13,7 @@ import org.uma.jmetal.util.evaluator.SolutionListEvaluator;
 import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
 
 import java.util.List;
+import org.uma.jmetal.util.evaluator.impl.MultithreadedSolutionListEvaluator;
 
 /**
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
@@ -35,14 +36,14 @@ public class SardegnaNSGAIIBuilder<S extends Solution<?>> implements AlgorithmBu
    * NSGAIIBuilder constructor
    */
   public SardegnaNSGAIIBuilder(Problem<S> problem, CrossoverOperator<S> crossoverOperator,
-      MutationOperator<S> mutationOperator) {
+      MutationOperator<S> mutationOperator, int numberOfThreads) {
     this.problem = problem;
     maxEvaluations = 25000;
     populationSize = 100;
     this.crossoverOperator = crossoverOperator ;
     this.mutationOperator = mutationOperator ;
     selectionOperator = new BinaryTournamentSelection<S>(new RankingAndCrowdingDistanceComparator<S>()) ;
-    evaluator = new SequentialSolutionListEvaluator<S>();
+    evaluator = new MultithreadedSolutionListEvaluator<S>(numberOfThreads, problem);
   }
 
   public SardegnaNSGAIIBuilder<S> setMaxEvaluations(int maxEvaluations) {
