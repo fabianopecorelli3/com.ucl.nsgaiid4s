@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.superamigos.sardegna</groupId>
-    <artifactId>sardegna</artifactId>
+    <groupId>com.ucl.nsgaii-d4s</groupId>
+    <artifactId>NSGAII-D4S</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Sardegna</name>
+    <name>NSGAII-D4S</name>
     <description>Scala framework for multi-objective genetic algorithms</description>
     <!-- <url>http://jmetal.github.io/jMetal/</url> 
 
@@ -70,7 +70,8 @@
     </repositories>
 
     <modules>
-        <module>sardegna-core</module>
+        <module>com.ucl.nsgaiid4s-core</module>
+        <module>com.ucl.nsgaiid4s-analysis</module>
     </modules>
 
     <profiles>
@@ -206,7 +207,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.superamigos.sardegna.core.SardegnaNSGAIIStudy</mainClass>
+                            <mainClass>com.ucl.nsgaii-d4s.core.SardegnaNSGAIIStudy</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -228,17 +229,11 @@
     <dependencyManagement>
         
         <dependencies>
+            
             <dependency>
                 <groupId>com.amazonaws</groupId>
-                <artifactId>aws-java-sdk-bom</artifactId>
-                <version>1.10.10</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.superamigos.sardegna</groupId>
-                <artifactId>sardegna-exec</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <artifactId>aws-java-sdk</artifactId>
+                <version>1.11.327</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>

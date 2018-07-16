@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-07-11T09:43:33</date>
+  <millis>1531295013628</millis>
+  <sequence>0</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.JMetalLogger</class>
+  <method>configureLoggers</method>
+  <thread>1</thread>
+  <message>Loggers configured with null</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:33</date>
+  <millis>1531295013659</millis>
+  <sequence>1</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.evaluator.impl.MultithreadedSolutionListEvaluator</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Number of cores: 4</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:33</date>
+  <millis>1531295013675</millis>
+  <sequence>2</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.evaluator.impl.MultithreadedSolutionListEvaluator</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Number of cores: 4</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:33</date>
+  <millis>1531295013675</millis>
+  <sequence>3</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.evaluator.impl.MultithreadedSolutionListEvaluator</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Number of cores: 4</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:33</date>
+  <millis>1531295013675</millis>
+  <sequence>4</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.evaluator.impl.MultithreadedSolutionListEvaluator</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Number of cores: 4</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:33</date>
+  <millis>1531295013675</millis>
+  <sequence>5</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.evaluator.impl.MultithreadedSolutionListEvaluator</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Number of cores: 4</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:33</date>
+  <millis>1531295013675</millis>
+  <sequence>6</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.evaluator.impl.MultithreadedSolutionListEvaluator</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Number of cores: 4</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:33</date>
+  <millis>1531295013675</millis>
+  <sequence>7</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.evaluator.impl.MultithreadedSolutionListEvaluator</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Number of cores: 4</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:33</date>
+  <millis>1531295013690</millis>
+  <sequence>8</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.evaluator.impl.MultithreadedSolutionListEvaluator</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Number of cores: 4</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:33</date>
+  <millis>1531295013690</millis>
+  <sequence>9</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.evaluator.impl.MultithreadedSolutionListEvaluator</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Number of cores: 4</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:33</date>
+  <millis>1531295013690</millis>
+  <sequence>10</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.evaluator.impl.MultithreadedSolutionListEvaluator</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Number of cores: 4</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:33</date>
+  <millis>1531295013690</millis>
+  <sequence>11</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.core.ExecuteAlgorithms</class>
+  <method>run</method>
+  <thread>1</thread>
+  <message>ExecuteAlgorithms: Preparing output directory</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:33</date>
+  <millis>1531295013690</millis>
+  <sequence>12</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message>Creating C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/jMetal/ZDT1</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:33</date>
+  <millis>1531295013690</millis>
+  <sequence>13</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message> Running algorithm: jMetal, problem: ZDT1, run: 0, funFile: C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/jMetal/ZDT1/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:34</date>
+  <millis>1531295014498</millis>
+  <sequence>14</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message>Creating C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/REPL/ZDT1</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:34</date>
+  <millis>1531295014498</millis>
+  <sequence>15</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message> Running algorithm: REPL, problem: ZDT1, run: 0, funFile: C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/REPL/ZDT1/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:45</date>
+  <millis>1531295025719</millis>
+  <sequence>16</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message> Running algorithm: RR, problem: ZDT1, run: 0, funFile: C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/RR/ZDT1/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:54</date>
+  <millis>1531295034809</millis>
+  <sequence>17</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message>Creating C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/jMetal/ZDT2</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:54</date>
+  <millis>1531295034809</millis>
+  <sequence>18</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message> Running algorithm: jMetal, problem: ZDT2, run: 0, funFile: C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/jMetal/ZDT2/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:55</date>
+  <millis>1531295035219</millis>
+  <sequence>19</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message>Creating C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/REPL/ZDT2</message>
+</record>
+<record>
+  <date>2018-07-11T09:43:55</date>
+  <millis>1531295035219</millis>
+  <sequence>20</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message> Running algorithm: REPL, problem: ZDT2, run: 0, funFile: C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/REPL/ZDT2/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-07-11T09:44:03</date>
+  <millis>1531295043807</millis>
+  <sequence>21</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message> Running algorithm: RR, problem: ZDT2, run: 0, funFile: C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/RR/ZDT2/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-07-11T09:44:11</date>
+  <millis>1531295051754</millis>
+  <sequence>22</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message>Creating C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/jMetal/ZDT3</message>
+</record>
+<record>
+  <date>2018-07-11T09:44:11</date>
+  <millis>1531295051754</millis>
+  <sequence>23</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message> Running algorithm: jMetal, problem: ZDT3, run: 0, funFile: C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/jMetal/ZDT3/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-07-11T09:44:12</date>
+  <millis>1531295052123</millis>
+  <sequence>24</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message>Creating C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/REPL/ZDT3</message>
+</record>
+<record>
+  <date>2018-07-11T09:44:12</date>
+  <millis>1531295052124</millis>
+  <sequence>25</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message> Running algorithm: REPL, problem: ZDT3, run: 0, funFile: C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/REPL/ZDT3/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-07-11T09:44:20</date>
+  <millis>1531295060069</millis>
+  <sequence>26</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message> Running algorithm: RR, problem: ZDT3, run: 0, funFile: C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/RR/ZDT3/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-07-11T09:44:27</date>
+  <millis>1531295067778</millis>
+  <sequence>27</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message>Creating C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/jMetal/ZDT4</message>
+</record>
+<record>
+  <date>2018-07-11T09:44:27</date>
+  <millis>1531295067778</millis>
+  <sequence>28</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message> Running algorithm: jMetal, problem: ZDT4, run: 0, funFile: C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/jMetal/ZDT4/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-07-11T09:44:27</date>
+  <millis>1531295067992</millis>
+  <sequence>29</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message>Creating C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/REPL/ZDT4</message>
+</record>
+<record>
+  <date>2018-07-11T09:44:27</date>
+  <millis>1531295067992</millis>
+  <sequence>30</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message> Running algorithm: REPL, problem: ZDT4, run: 0, funFile: C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/REPL/ZDT4/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-07-11T09:44:33</date>
+  <millis>1531295073219</millis>
+  <sequence>31</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message> Running algorithm: RR, problem: ZDT4, run: 0, funFile: C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/RR/ZDT4/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-07-11T09:44:38</date>
+  <millis>1531295078609</millis>
+  <sequence>32</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message>Creating C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/jMetal/ZDT6</message>
+</record>
+<record>
+  <date>2018-07-11T09:44:38</date>
+  <millis>1531295078609</millis>
+  <sequence>33</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message> Running algorithm: jMetal, problem: ZDT6, run: 0, funFile: C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/jMetal/ZDT6/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-07-11T09:44:38</date>
+  <millis>1531295078825</millis>
+  <sequence>34</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message>Creating C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/REPL/ZDT6</message>
+</record>
+<record>
+  <date>2018-07-11T09:44:38</date>
+  <millis>1531295078825</millis>
+  <sequence>35</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message> Running algorithm: REPL, problem: ZDT6, run: 0, funFile: C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/REPL/ZDT6/FUN0.tsv</message>
+</record>
+<record>
+  <date>2018-07-11T09:44:44</date>
+  <millis>1531295084485</millis>
+  <sequence>36</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>com.ucl.nsgaiid4s.experiment.component.NSGAIID4SExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>1</thread>
+  <message> Running algorithm: RR, problem: ZDT6, run: 0, funFile: C:\Users\fably\Desktop\SALVOQUI/ZDTStudy/data/RR/ZDT6/FUN0.tsv</message>
+</record>
+</log>
